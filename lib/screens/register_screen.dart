@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -71,19 +73,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _nameHusbandController.text.trim().isEmpty ||
           _icHusbandController.text.trim().isEmpty) {
         _showErrorDialog('Sila isikan semua ruangan');
+        return;
       }
 
       // Create user in FirebaseAuth
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      // Get the user's uid
+      String uid = userCredential.user!.uid;
 
       // Initialize Firestore
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       // Create a new user document
       final patient = <String, dynamic>{
+        "uid": uid,
         "name": _nameController.text.trim(),
         "phone": _phoneController.text.trim(),
         "ic": _icController.text.trim(),
@@ -92,15 +100,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
         "national": _nationalController.text.trim(),
         "nameHusband": _nameHusbandController.text.trim(),
         "icHusband": _icHusbandController.text.trim(),
-      };
+        };
 
       // Add the user document to Firestore
-      await firestore.collection("patient").add(patient).then(
-          (DocumentReference doc) =>
-              print('DocumentSnapshot added with ID: ${doc.id}'));
+      await firestore.collection("patient").doc(uid).set(patient).then(() {
+        print('DocumentSnapshot added with ID: $uid');
+      } as FutureOr Function(void value)).catchError((error) {
+        print('Error adding document: $error');
+      });
     } catch (e) {
-      print('Error signing up: $e');
-      // Handle error: display error message to the user
+      if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
+        _showErrorDialog('Email sudah digunakan. Sila gunakan email lain.');
+      } else {
+        print('Error signing up: $e');
+        // Handle other errors: display error message to the user
+      }
     }
   }
 

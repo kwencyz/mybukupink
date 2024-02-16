@@ -91,11 +91,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        "assets/icons/noprofile.png",
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.contain,
+                      FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('patient')
+                            .doc(user.uid)
+                            .get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            if (snapshot.hasData && snapshot.data != null) {
+                              final data =
+                                  snapshot.data!.data() as Map<String, dynamic>;
+                              final imageUrl = data['profilepic'];
+                              return imageUrl != null
+                                  ? ClipOval(
+                                      child: Image.network(
+                                        imageUrl,
+                                        height: 150,
+                                        width: 150,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Image.asset(
+                                      "assets/icons/noprofile.png",
+                                      width: 150,
+                                      height: 150,
+                                      fit: BoxFit.contain,
+                                    );
+                            }
+                          }
+                          return CircularProgressIndicator();
+                        },
                       ),
                       SizedBox(height: 10),
                       GestureDetector(
@@ -140,6 +170,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 await referenceImageToUpload.getDownloadURL();
                             print(
                                 'Image uploaded to Firebase Storage: $imageUrl');
+
+                            // Upload the imageUrl to Firestore
+                            await FirebaseFirestore.instance
+                                .collection('patient')
+                                .doc(user.uid)
+                                .update({'profilepic': imageUrl});
+                            print('ImageUrl uploaded to Firestore: $imageUrl');
+
+                            // Update the UI with the new image URL
+                            setState(() {
+                              imageUrl = imageUrl;
+                            });
                           } catch (error) {
                             print('Error uploading image: $error');
                           }
