@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "803885927964",
+    "project_id": "mybukupink-b758b",
+    "storage_bucket": "mybukupink-b758b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803885927964:android:3b9d036f5d470b083459d9",
+        "android_client_info": {
+          "package_name": "com.example.mybukupink"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDSzc6JdvzRy_1hYTac2fyDdv_yCHPyHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803885927964:android:8e6693f9347124cf3459d9",
+        "android_client_info": {
+          "package_name": "com.mybukupink"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDSzc6JdvzRy_1hYTac2fyDdv_yCHPyHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

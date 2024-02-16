@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBm2cNZdMEVrOc8ZyQtsi0FqsHWOF16gXg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>803885927964</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.mybukupink.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>mybukupink-b758b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mybukupink-b758b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:803885927964:ios:5a58cf6dc172ff6f3459d9</string>
+</dict>
+</plist>
