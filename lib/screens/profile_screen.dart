@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors, non_constant_identifier_names, avoid_print
 
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -101,32 +97,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(height: 10),
                       GestureDetector(
-                        onTap: () async {
-                          ImagePicker imagePicker = ImagePicker();
-                          XFile? file = await imagePicker.pickImage(
-                              source: ImageSource.camera);
-                          print('${(file?.path)}');
-
-                          if (file == null) return;
-
-                          String fileName =
-                              DateTime.now().millisecondsSinceEpoch.toString();
-
-                          Reference referenceRoot =
-                              FirebaseStorage.instance.ref();
-                          Reference referenceDirImages =
-                              referenceRoot.child('profilePic');
-
-                          Reference referenceImageToUpload =
-                              referenceDirImages.child(fileName);
-                          try {
-                            await referenceImageToUpload.putFile(File(file.path));
-
-                            imageUrl = await referenceImageToUpload.getDownloadURL();
-                          } catch (error) {
-                            print('Error uploading image: $error');
-                          }
-                        },
                         child: Text(
                           'Kemaskini Gambar Profil',
                           style: TextStyle(
