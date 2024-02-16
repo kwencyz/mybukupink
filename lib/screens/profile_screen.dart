@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors, non_constant_identifier_names, avoid_print
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,10 +18,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser!;
-
-  //final CollectionReference _reference = FirebaseFirestore.instance.collection('patient');
-
-  String imageUrl = '';
 
   Future<void> fetchPatientData() async {
     try {
@@ -45,6 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     fetchPatientData();
   }
+
+  String imageUrl = '';
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(height: 10),
                       GestureDetector(
+                        onTap: () async {
+                          ImagePicker imagePicker = ImagePicker();
+                          XFile? file = await imagePicker.pickImage(
+                              source: ImageSource.gallery);
+                          print('${(file?.path)}');
+
+                          if (file == null) return;
+
+                          String fileName =
+                              DateTime.now().millisecondsSinceEpoch.toString();
+
+                          Reference referenceRoot =
+                              FirebaseStorage.instance.ref();
+                          Reference referenceDirImages =
+                              referenceRoot.child('profilePic');
+
+                          Reference referenceImageToUpload =
+                              referenceDirImages.child(fileName);
+                          try {
+                            // Get the file extension
+                            String extension = file.path.split('.').last;
+
+                            // Set the content type based on the file extension
+                            String contentType =
+                                'image/jpeg'; // Default content type for images
+                            if (extension == 'png') {
+                              contentType = 'image/png';
+                            } else if (extension == 'jpg' ||
+                                extension == 'jpeg') {
+                              contentType = 'image/jpeg';
+                            }
+
+                            // Upload the file to Firebase Storage with the specified content type
+                            await referenceImageToUpload.putFile(
+                              File(file.path),
+                              SettableMetadata(contentType: contentType),
+                            );
+                            imageUrl =
+                                await referenceImageToUpload.getDownloadURL();
+                            print(
+                                'Image uploaded to Firebase Storage: $imageUrl');
+                          } catch (error) {
+                            print('Error uploading image: $error');
+                          }
+                        },
                         child: Text(
                           'Kemaskini Gambar Profil',
                           style: TextStyle(
