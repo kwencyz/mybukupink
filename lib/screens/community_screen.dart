@@ -12,14 +12,18 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class ListItemView extends StatelessWidget {
-  final String username;
+  final String forumName;
   final String forumText;
+  final String commentName;
+  final String commentText;
 
   const ListItemView({
-    super.key,
-    required this.username,
+    Key? key,
+    required this.forumName,
     required this.forumText,
-  });
+    required this.commentName,
+    required this.commentText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +34,7 @@ class ListItemView extends StatelessWidget {
       ),
       child: Column(
         children: [
+          //forum
           Container(
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -38,22 +43,24 @@ class ListItemView extends StatelessWidget {
             ),
             child: ListTile(
               title: Text(
-                username,
+                forumName,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(forumText),
             ),
           ),
+          //comment
           Container(
             margin: EdgeInsets.only(left: 10, right: 10),
             child: ListTile(
               title: Text(
-                username,
+                commentName,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(forumText),
+              subtitle: Text(commentText),
             ),
           ),
+          //add comment
           Container(
             width: 350,
             height: 40,
@@ -144,7 +151,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 child: ListView.builder(
                                   itemCount: documents.length,
                                   itemBuilder: (context, index) {
-                                    var document = documents[index].data()!;
+                                    var document = documents[index];
                                     var usernameStream = FirebaseFirestore
                                         .instance
                                         .collection('patient')
@@ -175,12 +182,113 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                                         var forumText = document['forumText'];
 
-                                        return SizedBox(
-                                          width: double.infinity,
-                                          child: ListItemView(
-                                            username: username,
-                                            forumText: forumText,
-                                          ),
+                                        var forumId =
+                                            document.id; // Get the document ID
+
+                                        var commentsStream = FirebaseFirestore
+                                            .instance
+                                            .collection('comment')
+                                            .where('forumId',
+                                                isEqualTo: forumId)
+                                            .snapshots();
+
+                                        return StreamBuilder<
+                                            QuerySnapshot<
+                                                Map<String, dynamic>>>(
+                                          stream: commentsStream,
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<
+                                                      QuerySnapshot<
+                                                          Map<String, dynamic>>>
+                                                  commentsSnapshot) {
+                                            if (commentsSnapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${commentsSnapshot.error}');
+                                            }
+
+                                            if (commentsSnapshot
+                                                    .connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            }
+
+                                            List<
+                                                    DocumentSnapshot<
+                                                        Map<String, dynamic>>>
+                                                commentsDocuments =
+                                                commentsSnapshot.data!.docs;
+
+                                            return Column(
+                                              children: [
+                                                ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount:
+                                                      commentsDocuments.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var commentDocument =
+                                                        commentsDocuments[
+                                                            index];
+                                                    var commentUid =
+                                                        commentDocument['uid'];
+                                                    var commentText =
+                                                        commentDocument[
+                                                            'commentText'];
+
+                                                    var usernameStream =
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'patient')
+                                                            .doc(commentUid)
+                                                            .snapshots();
+
+                                                    return StreamBuilder<
+                                                        DocumentSnapshot<
+                                                            Map<String,
+                                                                dynamic>>>(
+                                                      stream: usernameStream,
+                                                      builder: (BuildContext
+                                                              context,
+                                                          AsyncSnapshot<
+                                                                  DocumentSnapshot<
+                                                                      Map<String,
+                                                                          dynamic>>>
+                                                              usernameSnapshot) {
+                                                        if (usernameSnapshot
+                                                            .hasError) {
+                                                          return Text(
+                                                              'Error: ${usernameSnapshot.error}');
+                                                        }
+
+                                                        if (usernameSnapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .waiting) {
+                                                          return CircularProgressIndicator();
+                                                        }
+
+                                                        var usernameData =
+                                                            usernameSnapshot
+                                                                .data!
+                                                                .data()!;
+                                                        var commentName =
+                                                            usernameData[
+                                                                'name'];
+
+                                                        return ListItemView(
+                                                          forumName: username,
+                                                          forumText: forumText,
+                                                          commentName: commentName,
+                                                          commentText: commentText,
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         );
                                       },
                                     );
