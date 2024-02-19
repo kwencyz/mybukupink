@@ -144,7 +144,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                         return SizedBox(
                           width: 500,
-                          height: 500,
+                          height: 300,
                           child: Column(
                             children: [
                               Expanded(
