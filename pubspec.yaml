@@ -27,7 +27,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/splash.gif
-    - assets/images/logoWord.png
+    - assets/images/logo.png
+    - assets/images/word.png
     - assets/images/background.png
     - assets/icons/community.svg
     - assets/icons/home.svg

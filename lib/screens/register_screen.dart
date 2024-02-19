@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   child: Image.asset(
-                    "assets/images/logoWord.png",
+                    "assets/images/logo.png",
                     width: 100,
                     height: 100,
                     fit: BoxFit.contain,
