@@ -225,11 +225,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.22"
+  flat_list:
+    dependency: "direct main"
+    description:
+      name: flat_list
+      sha256: cf9a6cf363ae644148987bed64898548aa745f76293ad60d39de3ebf5c7604bf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.14"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      sha256: cde36b12f7188c85286fba9b38cc5a902e7279f36dd676967106c041dc9dde70
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.5"
   flutter_lints:
     dependency: "direct dev"
     description:
