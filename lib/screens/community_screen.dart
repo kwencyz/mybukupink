@@ -1,93 +1,35 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CommunityScreen extends StatefulWidget {
-  const CommunityScreen({super.key});
+  const CommunityScreen({Key? key}) : super(key: key);
 
   @override
   State<CommunityScreen> createState() => _CommunityScreenState();
 }
 
-class ListItemView extends StatelessWidget {
-  final String forumName;
-  final String forumText;
-  final String commentName;
-  final String commentText;
-
-  const ListItemView({
-    Key? key,
-    required this.forumName,
-    required this.forumText,
-    required this.commentName,
-    required this.commentText,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          //forum
-          Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(232, 223, 245, 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              title: Text(
-                forumName,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(forumText),
-            ),
-          ),
-          //comment
-          Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: ListTile(
-              title: Text(
-                commentName,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(commentText),
-            ),
-          ),
-          //add comment
-          Container(
-            width: 350,
-            height: 40,
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Masukkan Komen Anda',
-                  contentPadding: EdgeInsets.all(10.0)),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class _CommunityScreenState extends State<CommunityScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add forum logic
+        },
+        child: SvgPicture.asset(
+          'assets/icons/community.svg',
+          width: 24,
+          height: 24,
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -112,7 +54,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                   SizedBox(height: 10),
                   Container(
-                    margin: const EdgeInsets.only(left: 30, right: 20),
+                    margin:
+                        const EdgeInsets.only(left: 30, right: 20, bottom: 20),
                     alignment: Alignment.centerLeft,
                     child: const Text(
                       "Komuniti Ibu Hamil",
@@ -120,183 +63,220 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  Expanded(
+                    child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('forum')
                           .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snapshot) {
+                      builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         }
 
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return Center(child: CircularProgressIndicator());
                         }
 
-                        List<DocumentSnapshot<Map<String, dynamic>>> documents =
-                            snapshot.data!.docs;
+                        return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot document =
+                                snapshot.data!.docs[index];
+                            Map<String, dynamic> data =
+                                document.data() as Map<String, dynamic>;
+                            String uid = data['uid'];
 
-                        return SizedBox(
-                          width: 500,
-                          height: 300,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: documents.length,
-                                  itemBuilder: (context, index) {
-                                    var document = documents[index];
-                                    var usernameStream = FirebaseFirestore
-                                        .instance
-                                        .collection('patient')
-                                        .doc(document['uid'])
-                                        .snapshots();
+                            return FutureBuilder<DocumentSnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('patient')
+                                  .doc(uid)
+                                  .get(),
+                              builder: (context, userSnapshot) {
+                                if (userSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
 
-                                    return StreamBuilder<
-                                        DocumentSnapshot<Map<String, dynamic>>>(
-                                      stream: usernameStream,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<
-                                                  DocumentSnapshot<
-                                                      Map<String, dynamic>>>
-                                              usernameSnapshot) {
-                                        if (usernameSnapshot.hasError) {
-                                          return Text(
-                                              'Error: ${usernameSnapshot.error}');
-                                        }
+                                if (userSnapshot.hasError) {
+                                  return Text('Error: ${userSnapshot.error}');
+                                }
 
-                                        if (usernameSnapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        }
+                                String username =
+                                    userSnapshot.data?['name'] ?? 'Unknown';
 
-                                        var usernameData =
-                                            usernameSnapshot.data!.data()!;
-                                        var username = usernameData['name'];
-
-                                        var forumText = document['forumText'];
-
-                                        var forumId =
-                                            document.id; // Get the document ID
-
-                                        var commentsStream = FirebaseFirestore
-                                            .instance
-                                            .collection('comment')
-                                            .where('forumId',
-                                                isEqualTo: forumId)
-                                            .snapshots();
-
-                                        return StreamBuilder<
-                                            QuerySnapshot<
-                                                Map<String, dynamic>>>(
-                                          stream: commentsStream,
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<
-                                                      QuerySnapshot<
-                                                          Map<String, dynamic>>>
-                                                  commentsSnapshot) {
-                                            if (commentsSnapshot.hasError) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Container(
+                                            padding:
+                                                EdgeInsets.only(bottom: 10),
+                                            decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  232, 223, 245, 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: ListTile(
+                                              title: Text(
+                                                username,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              subtitle: Text(data['forumText']),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: FirebaseFirestore.instance
+                                              .collection('comment')
+                                              .where('forumId',
+                                                  isEqualTo: document.id)
+                                              .snapshots(),
+                                          builder: (context, commentSnapshot) {
+                                            if (commentSnapshot.hasError) {
                                               return Text(
-                                                  'Error: ${commentsSnapshot.error}');
+                                                  'Error: ${commentSnapshot.error}');
                                             }
 
-                                            if (commentsSnapshot
+                                            if (commentSnapshot
                                                     .connectionState ==
                                                 ConnectionState.waiting) {
-                                              return CircularProgressIndicator();
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
                                             }
 
-                                            List<
-                                                    DocumentSnapshot<
-                                                        Map<String, dynamic>>>
-                                                commentsDocuments =
-                                                commentsSnapshot.data!.docs;
-
                                             return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount:
-                                                      commentsDocuments.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    var commentDocument =
-                                                        commentsDocuments[
-                                                            index];
-                                                    var commentUid =
-                                                        commentDocument['uid'];
-                                                    var commentText =
-                                                        commentDocument[
-                                                            'commentText'];
+                                                ...commentSnapshot.data!.docs
+                                                    .map((commentDoc) {
+                                                  Map<String, dynamic>
+                                                      commentData =
+                                                      commentDoc.data() as Map<
+                                                          String, dynamic>;
+                                                  String uid =
+                                                      commentData['uid'];
 
-                                                    var usernameStream =
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'patient')
-                                                            .doc(commentUid)
-                                                            .snapshots();
+                                                  return FutureBuilder<
+                                                      DocumentSnapshot>(
+                                                    future: FirebaseFirestore
+                                                        .instance
+                                                        .collection('patient')
+                                                        .doc(uid)
+                                                        .get(),
+                                                    builder: (context,
+                                                        userSnapshot) {
+                                                      if (userSnapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return Text(
+                                                            'Loading...');
+                                                      }
 
-                                                    return StreamBuilder<
-                                                        DocumentSnapshot<
-                                                            Map<String,
-                                                                dynamic>>>(
-                                                      stream: usernameStream,
-                                                      builder: (BuildContext
-                                                              context,
-                                                          AsyncSnapshot<
-                                                                  DocumentSnapshot<
-                                                                      Map<String,
-                                                                          dynamic>>>
-                                                              usernameSnapshot) {
-                                                        if (usernameSnapshot
-                                                            .hasError) {
-                                                          return Text(
-                                                              'Error: ${usernameSnapshot.error}');
-                                                        }
+                                                      if (userSnapshot
+                                                          .hasError) {
+                                                        return Text(
+                                                            'Error: ${userSnapshot.error}');
+                                                      }
 
-                                                        if (usernameSnapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return CircularProgressIndicator();
-                                                        }
+                                                      String username =
+                                                          userSnapshot.data?[
+                                                                  'name'] ??
+                                                              'Unknown';
 
-                                                        var usernameData =
-                                                            usernameSnapshot
-                                                                .data!
-                                                                .data()!;
-                                                        var commentName =
-                                                            usernameData[
-                                                                'name'];
-
-                                                        return ListItemView(
-                                                          forumName: username,
-                                                          forumText: forumText,
-                                                          commentName: commentName,
-                                                          commentText: commentText,
-                                                        );
-                                                      },
-                                                    );
-                                                  },
+                                                      return Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                        ),
+                                                        child: Container(
+                                                          width: 400,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 20,
+                                                                  right: 10,
+                                                                  bottom: 10),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(username,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              Text(commentData[
+                                                                  'commentText']),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }).toList(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 20,
+                                                      right: 20,
+                                                      bottom: 20),
+                                                  child: TextField(
+                                                    controller:
+                                                        _commentController,
+                                                    decoration: InputDecoration(
+                                                      hintStyle: TextStyle(
+                                                          fontSize: 14),
+                                                      hintText:
+                                                          'Add a comment...',
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              left: 10),
+                                                    ),
+                                                    onSubmitted: (comment) {
+                                                      // Add the comment to the Firestore 'comment' collection
+                                                      FirebaseFirestore.instance
+                                                          .collection('comment')
+                                                          .add({
+                                                        'forumId': document.id,
+                                                        'uid': user.uid,
+                                                        'commentText': comment,
+                                                        'timestamp':
+                                                            DateTime.now(),
+                                                      });
+                                                      _commentController
+                                                          .clear();
+                                                    },
+                                                  ),
                                                 ),
                                               ],
                                             );
                                           },
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         );
                       },
                     ),
