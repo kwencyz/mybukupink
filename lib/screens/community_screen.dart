@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mybukupink/screens/addforum_screen.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({Key? key}) : super(key: key);
@@ -22,7 +23,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add forum logic
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddForumScreen(),
+            ),
+          );
         },
         child: SvgPicture.asset(
           'assets/icons/community.svg',
@@ -55,7 +61,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   SizedBox(height: 10),
                   Container(
                     margin:
-                        const EdgeInsets.only(left: 30, right: 20, bottom: 20),
+                        const EdgeInsets.only(left: 30, right: 20, bottom: 10),
                     alignment: Alignment.centerLeft,
                     child: const Text(
                       "Komuniti Ibu Hamil",
@@ -67,6 +73,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('forum')
+                          .orderBy('timestamp', descending: true)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
