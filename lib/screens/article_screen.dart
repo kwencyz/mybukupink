@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ArticleScreen extends StatefulWidget {
-  const ArticleScreen({Key? key}) : super(key: key);
+  const ArticleScreen({super.key});
 
   @override
   State<ArticleScreen> createState() => _ArticleScreenState();
@@ -13,71 +12,49 @@ class ArticleScreen extends StatefulWidget {
 
 class _ArticleScreenState extends State<ArticleScreen> {
   final user = FirebaseAuth.instance.currentUser!;
-  late String articleId;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Fetch the articleId from the arguments
-      final args = ModalRoute.of(context)!.settings.arguments;
-      if (args != null) {
-        setState(() {
-          articleId = args as String;
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (articleId == null) {
-      // Handle the case when articleId is not yet initialized
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('articles')
-            .doc(articleId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          var articleData = snapshot.data!.data() as Map<String, dynamic>;
-
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SafeArea(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    articleData['title'] ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                  Container(
+                    margin:
+                        const EdgeInsets.only(right: 20),
+                    alignment: Alignment.centerRight,
+                    child: Image.asset(
+                      "assets/images/word.png",
+                      width: 150,
+                      height: 50,
+                      fit: BoxFit.contain,
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    articleData['content'] ?? '',
-                    style: TextStyle(fontSize: 16),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(left: 30, right: 20, bottom: 20),
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Article",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
                   ),
                 ],
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
