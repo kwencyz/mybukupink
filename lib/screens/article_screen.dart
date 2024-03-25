@@ -47,7 +47,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
             .doc(articleId)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {5
+          if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
