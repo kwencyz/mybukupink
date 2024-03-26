@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mybukupink/screens/article_screen.dart';
 
 class LifestyleScreen extends StatefulWidget {
   const LifestyleScreen({super.key});
@@ -13,6 +14,8 @@ class LifestyleScreen extends StatefulWidget {
 
 class _LifestyleScreenState extends State<LifestyleScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+
+  String articleData = '';
 
   @override
   Widget build(BuildContext context) {
@@ -86,21 +89,13 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
 
-                                  // Fetch the full article document from Firestore
-                                  var articleSnapshot = await FirebaseFirestore
-                                      .instance
-                                      .collection('article')
-                                      .doc(articleId)
-                                      .get();
-
-                                  // Check if the article document exists
-                                  if (articleSnapshot.exists) {
-                                    // Navigate to the ArticleScreen with the articleId as argument
-                                    Navigator.pushNamed(context, '/article',
-                                        arguments: articleId);
-                                  } else {
-                                    print('Article not found');
-                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ArticleScreen(data: articleId),
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
@@ -152,7 +147,7 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                       margin: const EdgeInsets.only(left: 10, right: 20),
                       alignment: Alignment.centerLeft,
                       child: const Text(
-                        "Senaman Ibu Hamil",
+                        "Aktiviti Senaman",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 22),
                       ),
@@ -195,21 +190,13 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
 
-                                  // Fetch the full article document from Firestore
-                                  var articleSnapshot = await FirebaseFirestore
-                                      .instance
-                                      .collection('article')
-                                      .doc(articleId)
-                                      .get();
-
-                                  // Check if the article document exists
-                                  if (articleSnapshot.exists) {
-                                    // Navigate to the ArticleScreen with the articleId as argument
-                                    Navigator.pushNamed(context, '/article',
-                                        arguments: articleId);
-                                  } else {
-                                    print('Article not found');
-                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ArticleScreen(data: articleId),
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
@@ -303,21 +290,13 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
 
-                                  // Fetch the full article document from Firestore
-                                  var articleSnapshot = await FirebaseFirestore
-                                      .instance
-                                      .collection('article')
-                                      .doc(articleId)
-                                      .get();
-
-                                  // Check if the article document exists
-                                  if (articleSnapshot.exists) {
-                                    // Navigate to the ArticleScreen with the articleId as argument
-                                    Navigator.pushNamed(context, '/article',
-                                        arguments: articleId);
-                                  } else {
-                                    print('Article not found');
-                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ArticleScreen(data: articleId),
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
