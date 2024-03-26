@@ -24,19 +24,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
     articleId = widget.data;
   }
 
-/*   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args = ModalRoute.of(context)!.settings.arguments;
-      if (args != null) {
-        setState(() {
-          articleId = args as String;
-        });
-      }
-    });
-  } */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,45 +37,105 @@ class _ArticleScreenState extends State<ArticleScreen> {
               ),
             ),
             child: SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    alignment: Alignment.centerRight,
-                    child: Image.asset(
-                      "assets/images/word.png",
-                      width: 150,
-                      height: 50,
-                      fit: BoxFit.contain,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 20),
+                      alignment: Alignment.centerRight,
+                      child: Image.asset(
+                        "assets/images/word.png",
+                        width: 150,
+                        height: 50,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, right: 20),
-                    alignment: Alignment.centerLeft,
-                    child: StreamBuilder<DocumentSnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('article')
-                          .doc(articleId)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
-                        }
-
-                        var articleData =
-                            snapshot.data!.data() as Map<String, dynamic>;
-                        var articleTitle = articleData['title'] as String?;
-
-                        return Text(
-                          articleTitle ?? 'Article Title',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
-                        );
-                      },
+                    SizedBox(height: 10),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 20),
+                      alignment: Alignment.centerLeft,
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('article')
+                            .doc(articleId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+                
+                          var articleData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          var articleTitle = articleData['title'] as String?;
+                
+                          return Text(
+                            articleTitle ?? 'Article Title',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 10),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
+                      height: 200,
+                      width: 600,
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: articleId.isNotEmpty
+                            ? FirebaseFirestore.instance
+                                .collection('article')
+                                .doc(articleId)
+                                .snapshots()
+                            : null, // Return null stream if articleId is empty
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                
+                          var articleData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          var imageUrl = articleData['image'] as String?;
+                
+                          return imageUrl != null
+                              ? Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                )
+                              : Placeholder();
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
+                      alignment: Alignment.centerLeft,
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('article')
+                            .doc(articleId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+                
+                          var articleData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          var articleText = articleData['text'] as String?;
+                
+                          return Text(
+                            articleText ?? 'Article Text',
+                            style: TextStyle(fontSize: 20),
+                            textAlign: TextAlign.justify,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                  ],
+                ),
               ),
             ),
           ),
