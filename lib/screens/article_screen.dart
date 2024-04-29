@@ -53,32 +53,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     ),
                     SizedBox(height: 10),
                     Container(
-                      margin: const EdgeInsets.only(left: 10, right: 20),
-                      alignment: Alignment.centerLeft,
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('article')
-                            .doc(articleId)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-                
-                          var articleData =
-                              snapshot.data!.data() as Map<String, dynamic>;
-                          var articleTitle = articleData['title'] as String?;
-                
-                          return Text(
-                            articleTitle ?? 'Article Title',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 22),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
                       margin: const EdgeInsets.only(left: 20, right: 20),
                       height: 200,
                       width: 600,
@@ -93,11 +67,11 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           if (!snapshot.hasData) {
                             return Center(child: CircularProgressIndicator());
                           }
-                
+
                           var articleData =
                               snapshot.data!.data() as Map<String, dynamic>;
                           var imageUrl = articleData['image'] as String?;
-                
+
                           return imageUrl != null
                               ? Image.network(
                                   imageUrl,
@@ -120,11 +94,37 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           if (!snapshot.hasData) {
                             return CircularProgressIndicator();
                           }
-                
+
+                          var articleData =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          var articleTitle = articleData['title'] as String?;
+
+                          return Text(
+                            articleTitle ?? 'Article Title',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
+                      alignment: Alignment.centerLeft,
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('article')
+                            .doc(articleId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+
                           var articleData =
                               snapshot.data!.data() as Map<String, dynamic>;
                           var articleText = articleData['text'] as String?;
-                
+
                           return Text(
                             articleText ?? 'Article Text',
                             style: TextStyle(fontSize: 20),
