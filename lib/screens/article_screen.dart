@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleScreen extends StatefulWidget {
   final String data;
@@ -27,119 +28,175 @@ class _ArticleScreenState extends State<ArticleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 20),
-                      alignment: Alignment.centerRight,
-                      child: Image.asset(
-                        "assets/images/word.png",
-                        width: 150,
-                        height: 50,
-                        fit: BoxFit.contain,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  expandedHeight: 300.0,
+                  flexibleSpace: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('article')
+                              .doc(articleId)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            var articleData =
+                                snapshot.data!.data() as Map<String, dynamic>;
+                            var imageUrl = articleData['image'] as String?;
+
+                            return imageUrl != null
+                                ? Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Placeholder();
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      height: 200,
-                      width: 600,
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: articleId.isNotEmpty
-                            ? FirebaseFirestore.instance
-                                .collection('article')
-                                .doc(articleId)
-                                .snapshots()
-                            : null, // Return null stream if articleId is empty
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-
-                          var articleData =
-                              snapshot.data!.data() as Map<String, dynamic>;
-                          var imageUrl = articleData['image'] as String?;
-
-                          return imageUrl != null
-                              ? Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                )
-                              : Placeholder();
-                        },
+                      Positioned(
+                        top: 5,
+                        left: 10,
+                        child: Image.asset(
+                          "assets/images/word.png",
+                          width: 150,
+                          height: 50,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      alignment: Alignment.centerLeft,
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('article')
-                            .doc(articleId)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-
-                          var articleData =
-                              snapshot.data!.data() as Map<String, dynamic>;
-                          var articleTitle = articleData['title'] as String?;
-
-                          return Text(
-                            articleTitle ?? 'Article Title',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 22),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      alignment: Alignment.centerLeft,
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('article')
-                            .doc(articleId)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-
-                          var articleData =
-                              snapshot.data!.data() as Map<String, dynamic>;
-                          var articleText = articleData['text'] as String?;
-
-                          return Text(
-                            articleText ?? 'Article Text',
-                            style: TextStyle(fontSize: 20),
-                            textAlign: TextAlign.justify,
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 50),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+            ];
+          },
+          body: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: ListView(
+              children: [
+                SizedBox(height: 20),
+                Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  alignment: Alignment.centerLeft,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('article')
+                        .doc(articleId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      var articleData =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      var articleTitle = articleData['title'] as String?;
+                      var articleAuthor = articleData['author'] as String?;
+                      var articleURL = articleData['url'] as String?;
+                      final Uri url = Uri.parse(articleURL!);
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color.fromRGBO(255, 53, 139, 1),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                // Navigate to the articleURL when the button is pressed
+                                launchUrl(url);
+                              },
+                              child: Text(
+                                'Artikel Penuh',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            articleTitle ?? 'Article Title',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Text(
+                                'oleh ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Text(
+                                articleAuthor ?? '-',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  alignment: Alignment.centerLeft,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('article')
+                        .doc(articleId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      var articleData =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      var articleText = articleData['text'] as String?;
+
+                      return Text(
+                        articleText ?? 'Article Text',
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.justify,
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 50),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
