@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mybukupink/screens/community_screen.dart';
@@ -9,21 +8,22 @@ import 'package:mybukupink/screens/lifestyle_screen.dart';
 import 'package:mybukupink/screens/profile_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({Key? key}) : super(key: key);
+  final int? selectedIndex;
+
+  const NavigationScreen({Key? key, this.selectedIndex = 0}) : super(key: key);
 
   @override
   State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
-
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectedIndex ?? 0;
     _pageController = PageController(initialPage: _selectedIndex);
   }
 
@@ -62,8 +62,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               child: SvgPicture.asset(
                 'assets/icons/home.svg',
-                width: 24, // Set the width of the SVG icon
-                height: 24, // Set the height of the SVG icon
+                width: 24,
+                height: 24,
               ),
             ),
             label: 'Menu Utama',
@@ -78,8 +78,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               child: SvgPicture.asset(
                 'assets/icons/lifestyle.svg',
-                width: 24, // Set the width of the SVG icon
-                height: 24, // Set the height of the SVG icon
+                width: 24,
+                height: 24,
               ),
             ),
             label: 'Gaya Hidup',
@@ -94,8 +94,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               child: SvgPicture.asset(
                 'assets/icons/community.svg',
-                width: 24, // Set the width of the SVG icon
-                height: 24, // Set the height of the SVG icon
+                width: 24,
+                height: 24,
               ),
             ),
             label: 'Komuniti',
@@ -110,8 +110,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               child: SvgPicture.asset(
                 'assets/icons/profile.svg',
-                width: 24, // Set the width of the SVG icon
-                height: 24, // Set the height of the SVG icon
+                width: 24,
+                height: 24,
               ),
             ),
             label: 'Profil',

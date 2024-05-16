@@ -100,14 +100,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         "national": _nationalController.text.trim(),
         "nameHusband": _nameHusbandController.text.trim(),
         "icHusband": _icHusbandController.text.trim(),
-        };
+      };
 
-      // Add the user document to Firestore
-      await firestore.collection("patient").doc(uid).set(patient).then(() {
-        print('DocumentSnapshot added with ID: $uid');
-      } as FutureOr Function(void value)).catchError((error) {
-        print('Error adding document: $error');
-      });
+      final records = <String, dynamic>{
+        "name": _nameController.text.trim(),
+      };
+
+      // Add the user document to the "patient" collection
+      await firestore.collection("patient").doc(uid).set(patient);
+
+      // Add the records document to the "records" collection
+      await firestore.collection("records").doc(uid).set(records);
+
+      print('User signed up successfully with UID: $uid');
     } catch (e) {
       if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
         _showErrorDialog('Email sudah digunakan. Sila gunakan email lain.');
