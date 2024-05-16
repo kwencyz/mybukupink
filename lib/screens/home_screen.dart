@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mybukupink/screens/appointment_screen.dart';
 import 'package:mybukupink/screens/history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -222,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: TextStyle(
                                 color: Color.fromRGBO(56, 56, 56, 1),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 30,
+                                fontSize: 40,
                               ),
                             ),
                           ),
@@ -348,7 +349,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size.fromWidth(400),
-                              backgroundColor: Color.fromRGBO(255, 53, 139, 1),
+                              backgroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AppointmentScreen()),
+                              );
+                            },
+                            child: Text(
+                              'Rekod Temujanji',
+                              style: TextStyle(
+                                color: Color.fromRGBO(255, 53, 139, 1),
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size.fromWidth(400),
+                              backgroundColor: Colors.white,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -358,9 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             child: Text(
-                              'Sejarah Temujanji',
+                              'Sejarah Kehamilan',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Color.fromRGBO(255, 53, 139, 1),
                                 fontSize: 16,
                               ),
                             ),

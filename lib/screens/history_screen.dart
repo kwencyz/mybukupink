@@ -45,7 +45,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         const EdgeInsets.only(left: 30, right: 20, bottom: 20),
                     alignment: Alignment.centerLeft,
                     child: const Text(
-                      "History",
+                      "Sejarah Kehamilan",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
