@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mybukupink/screens/history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,9 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final weeks = (difference.inDays / 7).floor();
 
       int trimester;
-      if (weeks < 12) {
+      if (weeks <= 12) {
         trimester = 0;
-      } else if (weeks < 28) {
+      } else if (weeks > 12 && weeks < 28) {
         trimester = 1;
       } else {
         trimester = 2;
@@ -112,18 +113,64 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
 
                       if (startDate == null) {
-                        return Container(
-                          margin: const EdgeInsets.only(
-                              left: 30, right: 20, bottom: 20),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Tiada data kehamilan tersedia",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Tiada data kehamilan tersedia",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 20),
+                            /* ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: Size.fromWidth(300),
+                                backgroundColor:
+                                    Color.fromRGBO(255, 53, 139, 1),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HistoryScreen()),
+                                );
+                              },
+                              child: Text(
+                                'Masukkan Rekod Kehamilan',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ), */
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: Size.fromWidth(300),
+                                backgroundColor:
+                                    Color.fromRGBO(255, 53, 139, 1),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HistoryScreen()),
+                                );
+                              },
+                              child: Text(
+                                'Sejarah Temujanji',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       }
 
@@ -285,6 +332,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(height: 10),
                               ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            width: 400,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(201, 241, 243, 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.asset('assets/images/trimester.gif'),
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size.fromWidth(400),
+                              backgroundColor: Color.fromRGBO(255, 53, 139, 1),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HistoryScreen()),
+                              );
+                            },
+                            child: Text(
+                              'Sejarah Temujanji',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ],
