@@ -16,6 +16,44 @@ class CheckupScreen extends StatefulWidget {
 
 class _CheckupScreenState extends State<CheckupScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+  int pregnantWeeks = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateCurrentWeeks();
+  }
+
+  void _calculateCurrentWeeks() async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('records')
+        .where('uid', isEqualTo: user.uid)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      // Handle case where no records are found for the user
+      return;
+    }
+
+    final data = snapshot.docs.first.data() as Map<String, dynamic>?;
+    Timestamp? startTimestamp;
+    if (data != null && data.containsKey('start')) {
+      startTimestamp = data['start'] as Timestamp;
+    }
+
+    DateTime? startDate;
+    if (startTimestamp != null) {
+      startDate = startTimestamp.toDate();
+    }
+
+    if (startDate != null) {
+      final now = DateTime.now();
+      final difference = now.difference(startDate);
+      final weeks = (difference.inDays / 7).floor();
+
+      pregnantWeeks = weeks;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,15 +218,26 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Tekanan Darah:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Tekanan Darah",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Image.asset(
+                                          "assets/icons/heart.png",
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                      ],
                                     ),
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Text(
                                           blood,
@@ -222,12 +271,22 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Berat Badan:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Berat Badan",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Image.asset(
+                                          "assets/icons/scale.png",
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                      ],
                                     ),
                                     Row(
                                       children: [
@@ -251,13 +310,139 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                   ],
                                 ),
                               ),
-                              // Add more containers for additional fields if needed
                             ],
                           ),
                         );
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 30, right: 20, bottom: 0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Pemeriksaan Jangkamasa",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ),
+                    FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('checkup')
+                          .where('appointmentId',
+                              isEqualTo: widget.appointmentId)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+                        if (snapshot.data == null ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Center(child: Text("Checkup data not found"));
+                        }
+
+                        final checkupData = snapshot.data!.docs[0];
+                        // Extract data from the checkup document
+                        final womb = checkupData['womb'];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Tempoh Hamil",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          pregnantWeeks.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 28,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "minggu",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                  width:
+                                      10), // Add space between the containers
+                              Container(
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Tinggi Rahim",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          womb.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 28,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "cm",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 50),
                   ],
                 ),
               ),

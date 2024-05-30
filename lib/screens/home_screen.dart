@@ -24,12 +24,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _calculateCurrentTrimester() async {
-    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('records')
-        .doc(user.uid)
+        .where('uid', isEqualTo: user.uid)
         .get();
 
-    final data = snapshot.data() as Map<String, dynamic>?;
+    if (snapshot.docs.isEmpty) {
+      // Handle case where no records are found for the user
+      return;
+    }
+
+    final data = snapshot.docs.first.data() as Map<String, dynamic>?;
     Timestamp? startTimestamp;
     if (data != null && data.containsKey('start')) {
       startTimestamp = data['start'] as Timestamp;
@@ -54,8 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
         trimester = 2;
       }
 
-      setState(() {
-        selectedTrimesterIndex = trimester;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          selectedTrimesterIndex = trimester;
+        });
       });
     }
   }
@@ -87,33 +94,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    FutureBuilder<DocumentSnapshot>(
+                    FutureBuilder<QuerySnapshot>(
                       future: FirebaseFirestore.instance
                           .collection('records')
-                          .doc(user.uid)
+                          .where('uid', isEqualTo: user.uid)
                           .get(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return CircularProgressIndicator();
                         }
-        
+
                         if (!snapshot.hasData) {
                           return Text("No data found.");
                         }
-        
-                        final data =
-                            snapshot.data!.data() as Map<String, dynamic>?;
-        
+
+                        final data = snapshot.data!.docs.first.data()
+                            as Map<String, dynamic>?;
+
                         Timestamp? startTimestamp;
                         if (data != null && data.containsKey('start')) {
                           startTimestamp = data['start'] as Timestamp;
                         }
-        
+
                         DateTime? startDate;
                         if (startTimestamp != null) {
                           startDate = startTimestamp.toDate();
                         }
-        
+
                         if (startDate == null) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -130,27 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               SizedBox(height: 20),
-                              /* ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size.fromWidth(300),
-                                  backgroundColor:
-                                      Color.fromRGBO(255, 53, 139, 1),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HistoryScreen()),
-                                  );
-                                },
-                                child: Text(
-                                  'Masukkan Rekod Kehamilan',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ), */
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   fixedSize: Size.fromWidth(300),
@@ -175,11 +162,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           );
                         }
-        
+
                         final now = DateTime.now();
                         final difference = now.difference(startDate);
                         final weeks = (difference.inDays / 7).floor();
-        
+
                         final List<Map<String, String>> trimesters = [
                           {
                             'trimester': "Pertama",
@@ -200,11 +187,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "Pada ketika ini, anda mungkin agak sukar untuk bergerak memandangkan fizikal perut yang semakin besar. Pada fasa ini juga, ia mungkin lebih mencabar berbanding trimester pertama dan kedua.",
                           },
                         ];
-        
+
                         return Column(
                           children: [
                             Container(
-                              margin: const EdgeInsets.only(left: 30, right: 20),
+                              margin:
+                                  const EdgeInsets.only(left: 30, right: 20),
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Anda telah hamil selama",
@@ -356,7 +344,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AppointmentScreen()),
+                                      builder: (context) =>
+                                          AppointmentScreen()),
                                 );
                               },
                               child: Text(

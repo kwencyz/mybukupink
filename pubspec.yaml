@@ -39,4 +39,6 @@ flutter:
     - assets/icons/lifestyle.svg
     - assets/icons/profile.svg
     - assets/icons/noprofile.png
+    - assets/icons/heart.png
+    - assets/icons/scale.png
     - assets/images/trimester.gif
