@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mybukupink/screens/checkup_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
@@ -178,6 +179,15 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   ],
                                 ),
                               ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckupScreen(
+                                        appointmentId: appointment.id),
+                                  ),
+                                );
+                              },
                             );
                           },
                         );
