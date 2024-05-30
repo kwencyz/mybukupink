@@ -16,12 +16,28 @@ class CheckupScreen extends StatefulWidget {
 
 class _CheckupScreenState extends State<CheckupScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+
   int pregnantWeeks = 0;
+  Map<String, dynamic>? checkupData;
 
   @override
   void initState() {
     super.initState();
     _calculateCurrentWeeks();
+    _fetchCheckupData();
+  }
+
+  Future<void> _fetchCheckupData() async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('checkup')
+        .where('appointmentId', isEqualTo: widget.appointmentId)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      setState(() {
+        checkupData = snapshot.docs[0].data() as Map<String, dynamic>?;
+      });
+    }
   }
 
   void _calculateCurrentWeeks() async {
@@ -439,6 +455,330 @@ class _CheckupScreenState extends State<CheckupScreen> {
                               ),
                             ],
                           ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 30, right: 20, bottom: 0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Pemeriksaan Janin",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ),
+                    FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('checkup')
+                          .where('appointmentId',
+                              isEqualTo: widget.appointmentId)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+                        if (snapshot.data == null ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Center(child: Text("Checkup data not found"));
+                        }
+
+                        final checkupData = snapshot.data!.docs[0];
+                        // Extract data from the checkup document
+                        final fetal = checkupData['fetal'];
+                        final heartRate = checkupData['heartRate'];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Kedudukan",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Text(
+                                      fetal,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 28,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                  width:
+                                      10), // Add space between the containers
+                              Container(
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Jantung",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          heartRate.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 28,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "bpm",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 30, right: 20, bottom: 0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Keputusan Ujian Makmal",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ),
+                    FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('checkup')
+                          .where('appointmentId',
+                              isEqualTo: widget.appointmentId)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+                        if (snapshot.data == null ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Center(child: Text("Checkup data not found"));
+                        }
+
+                        final checkupData = snapshot.data!.docs[0];
+                        final checkupId = checkupData.id;
+
+                        return FutureBuilder<QuerySnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection('lab')
+                              .where('checkupId', isEqualTo: checkupId)
+                              .get(),
+                          builder: (context, labSnapshot) {
+                            if (labSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            if (labSnapshot.hasError) {
+                              return Center(
+                                  child: Text("Error: ${labSnapshot.error}"));
+                            }
+                            if (labSnapshot.data == null ||
+                                labSnapshot.data!.docs.isEmpty) {
+                              return Center(child: Text("Lab data not found"));
+                            }
+
+                            final labData = labSnapshot.data!.docs[0];
+                            final albumin = labData['albumin'];
+                            final sugar = labData['sugar'];
+                            final glucose = labData['glucose'];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Albumin",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              albumin ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: albumin
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: albumin,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Gula",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              sugar ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: sugar
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: sugar,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Glukosa",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              glucose ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: glucose
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: glucose,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
