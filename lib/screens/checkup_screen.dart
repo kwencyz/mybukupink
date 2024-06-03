@@ -629,6 +629,15 @@ class _CheckupScreenState extends State<CheckupScreen> {
                             final albumin = labData['albumin'];
                             final sugar = labData['sugar'];
                             final glucose = labData['glucose'];
+                            final bilirubin = labData['bilirubin'];
+                            final ketones = labData['ketones'];
+                            final gravity = labData['gravity'];
+                            final redBlood = labData['redBlood'];
+                            final pH = labData['pH'];
+                            final protein = labData['protein'];
+                            final urobilinogen = labData['urobilinogen'];
+                            final nitrites = labData['nitrites'];
+                            final leukosit = labData['leukosit'];
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -738,7 +747,8 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           "Glukosa",
@@ -769,6 +779,394 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                               inactiveTrackColor: Colors
                                                   .green, // Change the inactive track color to green
                                               inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Bilirubin",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              bilirubin ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: bilirubin
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: bilirubin,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Ketones",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              ketones ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: ketones
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: ketones,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Sel Darah Merah",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              redBlood ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: redBlood
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: redBlood,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Protein",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              protein ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: protein
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: protein,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Nitrites",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              nitrites ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: nitrites
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: nitrites,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Leukosit",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              leukosit ? "+ve" : "-ve",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: leukosit
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Switch(
+                                              value: leukosit,
+                                              onChanged:
+                                                  null, // Set to null to make the switch view-only
+                                              activeTrackColor: Colors.red,
+                                              activeColor: Colors.white,
+                                              inactiveTrackColor: Colors
+                                                  .green, // Change the inactive track color to green
+                                              inactiveThumbColor: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    height: 50,
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 25),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Graviti Spesifik Urinari",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Text(
+                                          gravity.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    height: 50,
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 25),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "pH",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Text(
+                                          pH.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    height: 50,
+                                    padding:
+                                        EdgeInsets.only(left: 15, right: 25),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Urobilinogen",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              urobilinogen.toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "E.U/dl",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ],
                                         ),
