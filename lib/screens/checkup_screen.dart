@@ -1180,6 +1180,90 @@ class _CheckupScreenState extends State<CheckupScreen> {
                         );
                       },
                     ),
+                    SizedBox(height: 10),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 30, right: 20, bottom: 0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Masalah dan Pengendalian",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ),
+                    FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('advice')
+                          .where('appointmentId',
+                              isEqualTo: widget.appointmentId)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+                        if (snapshot.data == null ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Center(child: Text("Advice data not found"));
+                        }
+
+                        final adviceData = snapshot.data!.docs[0];
+                        // Extract data from the advice document
+                        final advice = adviceData['advice'];
+                        final warning = adviceData['warning'];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  advice,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  warning,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 50),
                   ],
                 ),
