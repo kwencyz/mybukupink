@@ -16,7 +16,7 @@ class CommunityScreen extends StatefulWidget {
 class _CommunityScreenState extends State<CommunityScreen> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  final TextEditingController _commentController = TextEditingController();
+  final Map<String, TextEditingController> _commentControllers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +247,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       bottom: 20),
                                                   child: TextField(
                                                     controller:
-                                                        _commentController,
+                                                        _commentControllers
+                                                            .putIfAbsent(
+                                                      document.id,
+                                                      () =>
+                                                          TextEditingController(),
+                                                    ),
                                                     decoration: InputDecoration(
                                                       hintStyle: TextStyle(
                                                           fontSize: 14),
@@ -268,7 +273,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                         'timestamp':
                                                             DateTime.now(),
                                                       });
-                                                      _commentController
+                                                      _commentControllers[
+                                                              document.id]!
                                                           .clear();
                                                     },
                                                   ),
@@ -295,5 +301,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Dispose all TextEditingController instances
+    _commentControllers.forEach((key, controller) => controller.dispose());
+    super.dispose();
   }
 }

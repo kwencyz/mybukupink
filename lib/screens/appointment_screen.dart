@@ -41,10 +41,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  FutureBuilder<DocumentSnapshot>(
+                  FutureBuilder<QuerySnapshot>(
                     future: FirebaseFirestore.instance
                         .collection('records')
-                        .doc(user.uid)
+                        .where('uid', isEqualTo: user.uid)
                         .get(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -55,8 +55,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         return Text("No data found.");
                       }
 
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>?;
+                      final data = snapshot.data!.docs.first.data()
+                            as Map<String, dynamic>?;
 
                       Timestamp? startTimestamp;
                       if (data != null && data.containsKey('start')) {
