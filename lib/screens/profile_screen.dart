@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mybukupink/screens/maternal_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -258,13 +259,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: GestureDetector(
                         child: Text(
-                          'Rekod Maklumat Kesihatan',
+                          'Riwayat Kesihatan Ibu',
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MaternalScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

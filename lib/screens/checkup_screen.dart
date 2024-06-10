@@ -1212,7 +1212,6 @@ class _CheckupScreenState extends State<CheckupScreen> {
                         }
 
                         final adviceData = snapshot.data!.docs[0];
-                        // Extract data from the advice document
                         final advice = adviceData['advice'];
                         final warning = adviceData['warning'];
 

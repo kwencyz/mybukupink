@@ -100,17 +100,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         "national": _nationalController.text.trim(),
         "nameHusband": _nameHusbandController.text.trim(),
         "icHusband": _icHusbandController.text.trim(),
-      };
-
-      final records = <String, dynamic>{
-        "name": _nameController.text.trim(),
+        "status": "tidak hamil",
       };
 
       // Add the user document to the "patient" collection
       await firestore.collection("patient").doc(uid).set(patient);
-
-      // Add the records document to the "records" collection
-      await firestore.collection("records").doc(uid).set(records);
 
       print('User signed up successfully with UID: $uid');
     } catch (e) {
