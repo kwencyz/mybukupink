@@ -56,7 +56,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       }
 
                       final data = snapshot.data!.docs.first.data()
-                            as Map<String, dynamic>?;
+                          as Map<String, dynamic>?;
 
                       Timestamp? startTimestamp;
                       if (data != null && data.containsKey('start')) {
@@ -130,7 +130,15 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         return ListView.builder(
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
-                            final appointment = snapshot.data!.docs[index];
+                            final appointments = snapshot.data!.docs;
+                            appointments.sort((a, b) {
+                              final dateA = a['timestamp'] as Timestamp;
+                              final dateB = b['timestamp'] as Timestamp;
+                              return dateB
+                                  .compareTo(dateA); // Sort in descending order
+                            });
+
+                            final appointment = appointments[index];
                             final date = appointment['timestamp'] as Timestamp;
                             final title = appointment['title'];
                             final formattedDate =
@@ -138,7 +146,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             final hour = date.toDate().hour > 12
                                 ? (date.toDate().hour - 12).toString()
                                 : date.toDate().hour.toString();
-
                             final minute =
                                 date.toDate().minute.toString().padLeft(2, '0');
                             final period =
