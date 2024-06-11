@@ -38,12 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _calculateCurrentTrimester();
-  }
-
   void _calculateCurrentTrimester() async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('records')
@@ -313,21 +307,151 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     );
                                   } else {
-                                    final recordData =
-                                        recordsSnapshot.data!.docs.first.data()
-                                            as Map<String, dynamic>;
-
-                                    final startTimestamp =
-                                        recordData['start'] as Timestamp?;
-                                    DateTime? startDate;
-                                    if (startTimestamp != null) {
-                                      startDate = startTimestamp.toDate();
-                                    }
-
                                     return Column(
                                       children: [
-                                        Text(
-                                            "Start Date: ${startDate?.toString()}"),
+                                        SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedTrimesterIndex = 0;
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    selectedTrimesterIndex == 0
+                                                        ? Color.fromRGBO(
+                                                            255, 53, 139, 1)
+                                                        : Colors.grey,
+                                              ),
+                                              child: Text(
+                                                'Trimester 1',
+                                                style: TextStyle(
+                                                  color:
+                                                      selectedTrimesterIndex ==
+                                                              0
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedTrimesterIndex = 1;
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    selectedTrimesterIndex == 1
+                                                        ? Color.fromRGBO(
+                                                            255, 53, 139, 1)
+                                                        : Colors.grey,
+                                              ),
+                                              child: Text(
+                                                'Trimester 2',
+                                                style: TextStyle(
+                                                  color:
+                                                      selectedTrimesterIndex ==
+                                                              1
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedTrimesterIndex = 2;
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    selectedTrimesterIndex == 2
+                                                        ? Color.fromRGBO(
+                                                            255, 53, 139, 1)
+                                                        : Colors.grey,
+                                              ),
+                                              child: Text(
+                                                'Trimester 3',
+                                                style: TextStyle(
+                                                  color:
+                                                      selectedTrimesterIndex ==
+                                                              2
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        Container(
+                                          width: 400,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Color.fromRGBO(
+                                                218, 234, 246, 1),
+                                          ),
+                                          padding: EdgeInsets.all(10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Trimester ${trimesters[selectedTrimesterIndex]['trimester']}",
+                                                style: TextStyle(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromRGBO(
+                                                      56, 56, 56, 1),
+                                                ),
+                                              ),
+                                              Text(
+                                                trimesters[
+                                                        selectedTrimesterIndex]
+                                                    ['duration']!,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromRGBO(
+                                                      102, 102, 102, 1),
+                                                ),
+                                              ),
+                                              SizedBox(height: 20),
+                                              Text(
+                                                trimesters[
+                                                        selectedTrimesterIndex]
+                                                    ['article']!,
+                                                textAlign: TextAlign.justify,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromRGBO(
+                                                      56, 56, 56, 1),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 20),
+                                        Container(
+                                          width: 400,
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                201, 241, 243, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Image.asset(
+                                              'assets/images/trimester.gif'),
+                                        ),
                                         SizedBox(height: 20),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -344,13 +468,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                           },
                                           child: Text(
-                                            'Sejarah Temujanji',
+                                            'Sejarah Kehamilan',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16,
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 200),
                                       ],
                                     );
                                   }
@@ -359,6 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           );
                         } else if (status == "hamil") {
+                          _calculateCurrentTrimester();
                           return FutureBuilder<QuerySnapshot>(
                             future: FirebaseFirestore.instance
                                 .collection('records')
