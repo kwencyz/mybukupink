@@ -38,6 +38,36 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _checkStatusAndCalculate();
+  }
+
+  Future<void> _checkStatusAndCalculate() async {
+    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('patient')
+        .doc(user.uid)
+        .get();
+
+    if (!snapshot.exists) {
+      // Handle case where no document is found for the user
+      return;
+    }
+
+    final data = snapshot.data() as Map<String, dynamic>?;
+
+    if (data == null) {
+      // Handle case where data is null
+      return;
+    }
+
+    final status = data['status'];
+    if (status == 'hamil') {
+      _calculateCurrentTrimester();
+    }
+  }
+
   void _calculateCurrentTrimester() async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('records')
@@ -484,7 +514,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           );
                         } else if (status == "hamil") {
-                          _calculateCurrentTrimester();
                           return FutureBuilder<QuerySnapshot>(
                             future: FirebaseFirestore.instance
                                 .collection('records')

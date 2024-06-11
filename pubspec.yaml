@@ -19,6 +19,7 @@ dependencies:
   flat_list: ^0.1.14
   flutter_hooks: ^0.20.5
   url_launcher: 6.2.6
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
