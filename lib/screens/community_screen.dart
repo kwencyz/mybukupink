@@ -151,8 +151,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                             final formattedDate = DateFormat('dd/MM/yyyy')
                                 .format(timestamp.toDate());
-                            final formattedTime = DateFormat('hh:mm a')
-                                .format(timestamp.toDate());
 
                             return FutureBuilder<DocumentSnapshot>(
                               future: FirebaseFirestore.instance

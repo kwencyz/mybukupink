@@ -386,7 +386,7 @@ class _UserScreenState extends State<UserScreen> {
                                   ConnectionState.waiting) {
                                 return CircularProgressIndicator();
                               }
-                          
+
                               if (!snapshot.hasData ||
                                   snapshot.data!.docs.isEmpty) {
                                 return Column(
@@ -394,8 +394,8 @@ class _UserScreenState extends State<UserScreen> {
                                   children: [
                                     Container(
                                       padding: EdgeInsets.all(10),
-                                      child: Text(
-                                          'Sila masukkan maklumat suami'),
+                                      child:
+                                          Text('Sila masukkan maklumat suami'),
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -424,22 +424,20 @@ class _UserScreenState extends State<UserScreen> {
                                   ],
                                 );
                               }
-                          
+
                               final data = snapshot.data!.docs.first.data()
                                   as Map<String, dynamic>?;
-                          
+
                               final nameHusband = data?['nameHusband'];
                               final etnikHusband = data?['etnikHusband'];
                               final icHusband = data?['icHusband'];
-                              final nationalHusband =
-                                  data?['nationalHusband'];
+                              final nationalHusband = data?['nationalHusband'];
                               final phoneHusband = data?['phoneHusband'];
-                          
+
                               return Column(
                                 children: [
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       FutureBuilder<QuerySnapshot>(
                                         future: FirebaseFirestore.instance
@@ -466,9 +464,8 @@ class _UserScreenState extends State<UserScreen> {
                                               fit: BoxFit.contain,
                                             );
                                           }
-                                          final data =
-                                              snapshot.data!.docs.first.data()
-                                                  as Map<String, dynamic>;
+                                          final data = snapshot.data!.docs.first
+                                              .data() as Map<String, dynamic>;
                                           final imageUrl = data['profilepic'];
                                           return imageUrl != null
                                               ? ClipOval(
@@ -494,21 +491,19 @@ class _UserScreenState extends State<UserScreen> {
                                               ImagePicker();
                                           XFile? file =
                                               await imagePicker.pickImage(
-                                                  source:
-                                                      ImageSource.gallery);
-                          
+                                                  source: ImageSource.gallery);
+
                                           if (file == null) return;
-                          
+
                                           String fileName = DateTime.now()
                                               .millisecondsSinceEpoch
                                               .toString();
-                          
+
                                           Reference referenceRoot =
                                               FirebaseStorage.instance.ref();
                                           Reference referenceDirImages =
-                                              referenceRoot
-                                                  .child('profilePic');
-                          
+                                              referenceRoot.child('profilePic');
+
                                           Reference referenceImageToUpload =
                                               referenceDirImages
                                                   .child(fileName);
@@ -516,7 +511,7 @@ class _UserScreenState extends State<UserScreen> {
                                             // Get the file extension
                                             String extension =
                                                 file.path.split('.').last;
-                          
+
                                             // Set the content type based on the file extension
                                             String contentType =
                                                 'image/jpeg'; // Default content type for images
@@ -526,7 +521,7 @@ class _UserScreenState extends State<UserScreen> {
                                                 extension == 'jpeg') {
                                               contentType = 'image/jpeg';
                                             }
-                          
+
                                             // Upload the file to Firebase Storage with the specified content type
                                             await referenceImageToUpload
                                                 .putFile(
@@ -539,16 +534,23 @@ class _UserScreenState extends State<UserScreen> {
                                                     .getDownloadURL();
                                             print(
                                                 'Image uploaded to Firebase Storage: $imageUrl');
-                          
+
                                             // Upload the imageUrl to Firestore
                                             await FirebaseFirestore.instance
-                                                .collection('patient')
-                                                .doc(user.uid)
-                                                .update(
+                                                .collection('patientHusband')
+                                                .where('uid',
+                                                    isEqualTo: user.uid)
+                                                .get()
+                                                .then((querySnapshot) {
+                                              for (var doc
+                                                  in querySnapshot.docs) {
+                                                doc.reference.update(
                                                     {'profilepic': imageUrl});
+                                              }
+                                            });
                                             print(
                                                 'ImageUrl uploaded to Firestore: $imageUrl');
-                          
+
                                             // Update the UI with the new image URL
                                             setState(() {
                                               imageUrl = imageUrl;
