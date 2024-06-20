@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mybukupink/screens/maternal_screen.dart';
+import 'package:mybukupink/screens/user_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -29,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // Update _userEmail with the fetched email
       setState(() {
-        _userEmail = documentSnapshot['email'];
         _userName = documentSnapshot['name'];
       });
     } catch (e) {
@@ -38,7 +38,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  late String _userEmail = 'Loading...';
   late String _userName = 'Loading...';
 
   @override
@@ -199,28 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                    ),
-                    child: Container(
-                      width: 400,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _userEmail,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -259,6 +236,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: GestureDetector(
                         child: Text(
+                          'Maklumat Ibu',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0,
+                    ),
+                    child: Container(
+                      width: 400,
+                      padding: EdgeInsets.all(10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: GestureDetector(
+                        child: Text(
                           'Riwayat Kesihatan Ibu',
                           style: TextStyle(
                             color: Colors.black,
@@ -270,8 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  MaternalScreen(),
+                              builder: (context) => MaternalScreen(),
                             ),
                           );
                         },
