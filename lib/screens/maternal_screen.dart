@@ -68,7 +68,47 @@ class _MaternalScreenState extends State<MaternalScreen> {
                         }
                         if (snapshot.data == null ||
                             snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text("Rekod tidak ditemui"));
+                          return Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 30, right: 20, bottom: 0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  "Tiada rekod kesihatan ditemui.",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 30, right: 20, bottom: 100),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  "Sila lakukan pemeriksaan kesihatan di klinik kesihatan berhampiran.",
+                                  style: TextStyle(fontSize: 20),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size.fromWidth(300),
+                                  backgroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                        .pop();
+                                },
+                                child: Text(
+                                  'Kembali',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(255, 53, 139, 1),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 600),
+                            ],
+                          );
                         }
 
                         final recordData = snapshot.data!.docs[0];
@@ -244,7 +284,6 @@ class _MaternalScreenState extends State<MaternalScreen> {
                                   ],
                                 ),
                               ),
-
                               SizedBox(height: 10),
                               Container(
                                 width: 500,
