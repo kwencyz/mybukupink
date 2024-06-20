@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mybukupink/screens/addforum_screen.dart';
+import 'package:intl/intl.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({Key? key}) : super(key: key);
@@ -18,22 +18,71 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   final Map<String, TextEditingController> _commentControllers = {};
 
+  final TextEditingController _forumController = TextEditingController();
+
+  Future<void> uploadForum(forum) {
+    // Add the comment to the Firestore 'forum' collection
+    FirebaseFirestore.instance.collection('forum').add({
+      'uid': user.uid,
+      'forumText': forum,
+      'timestamp': DateTime.now(),
+    });
+    _forumController.clear();
+    Navigator.of(context).pop();
+    return Future.value();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddForumScreen(),
-            ),
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(
+                  'Forum',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: Container(
+                  padding: EdgeInsets.all(5),
+                  width: 400,
+                  child: TextField(
+                    controller: _forumController,
+                    decoration: InputDecoration(
+                      hintText: 'Apa di fikiran anda?',
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Batal'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      uploadForum(_forumController.text);
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text('Muat Naik'),
+                  ),
+                ],
+              );
+            },
           );
         },
         child: SvgPicture.asset(
           'assets/icons/community.svg',
-          width: 24,
-          height: 24,
+          width: 30,
+          height: 30,
         ),
       ),
       body: Stack(
@@ -85,14 +134,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           return Center(child: CircularProgressIndicator());
                         }
 
+                        final List<DocumentSnapshot> documents =
+                            snapshot.data!.docs;
+
                         return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
+                          itemCount: documents.length,
                           itemBuilder: (context, index) {
                             DocumentSnapshot document =
                                 snapshot.data!.docs[index];
                             Map<String, dynamic> data =
                                 document.data() as Map<String, dynamic>;
                             String uid = data['uid'];
+
+                            final timestamp =
+                                document['timestamp'] as Timestamp;
+
+                            final formattedDate = DateFormat('dd/MM/yyyy')
+                                .format(timestamp.toDate());
+                            final formattedTime = DateFormat('hh:mm a')
+                                .format(timestamp.toDate());
 
                             return FutureBuilder<DocumentSnapshot>(
                               future: FirebaseFirestore.instance
@@ -136,13 +196,27 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                   BorderRadius.circular(10),
                                             ),
                                             child: ListTile(
-                                              title: Text(
-                                                username,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              title: Row(
+                                                children: [
+                                                  Text(
+                                                    username,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                  Text(
+                                                    formattedDate,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
-                                              subtitle: Text(data['forumText']),
+                                              subtitle: Text(
+                                                data['forumText'],
+                                                style: TextStyle(fontSize: 16),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -232,7 +306,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                                           FontWeight
                                                                               .bold)),
                                                               Text(commentData[
-                                                                  'commentText']),
+                                                                  'commentText'], style: TextStyle(fontSize: 16),),
                                                             ],
                                                           ),
                                                         ),
