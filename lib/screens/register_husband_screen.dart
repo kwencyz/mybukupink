@@ -85,12 +85,10 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
 
       await firestore.collection("patientHusband").doc(husbandId).set(patient);
 
-      Navigator.push(
+      Navigator.pushReplacement(
         // ignore: use_build_context_synchronously
         context,
-        MaterialPageRoute(
-          builder: (context) => UserScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => UserScreen()),
       );
 
       print('User data uploaded successfully');
