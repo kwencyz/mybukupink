@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mybukupink/screens/user_screen.dart';
+import 'package:uuid/uuid.dart';
 
 class RegisterHusbandScreen extends StatefulWidget {
   const RegisterHusbandScreen({super.key});
@@ -15,6 +17,7 @@ class RegisterHusbandScreen extends StatefulWidget {
 
 class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+  final uuid = Uuid();
 
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -67,9 +70,12 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
       // Initialize Firestore
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+      String husbandId = uuid.v4();
+
       // Create a new user document
       final patient = <String, dynamic>{
         "uid": user.uid,
+        "husbandId": husbandId,
         "nameHusband": _nameController.text.trim(),
         "phoneHusband": _phoneController.text.trim(),
         "icHusband": _icController.text.trim(),
@@ -77,9 +83,15 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
         "nationalHusband": _nationalController.text.trim(),
       };
 
-      await firestore.collection("patientHusband").add(patient);
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
+      await firestore.collection("patientHusband").doc(husbandId).set(patient);
+
+      Navigator.push(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserScreen(),
+        ),
+      );
 
       print('User data uploaded successfully');
     } catch (e) {
