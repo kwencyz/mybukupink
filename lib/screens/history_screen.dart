@@ -70,247 +70,272 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                         final records = recordSnapshot.data!.docs;
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Container(
-                            width: 500,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
+                        if (!records.contains('end')) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Text(
+                              "Tiada Sejarah Kehamilan Tersedia",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: records.length,
-                              itemBuilder: (context, index) {
-                                final recordData = records[index].data()
-                                    as Map<String, dynamic>?;
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Container(
+                              width: 500,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: records.length,
+                                itemBuilder: (context, index) {
+                                  final recordData = records[index].data()
+                                      as Map<String, dynamic>?;
 
-                                Timestamp? startTimestamp;
-                                if (recordData != null &&
-                                    recordData.containsKey('start')) {
-                                  startTimestamp =
-                                      recordData['start'] as Timestamp;
-                                }
+                                  Timestamp? startTimestamp;
+                                  if (recordData != null &&
+                                      recordData.containsKey('start')) {
+                                    startTimestamp =
+                                        recordData['start'] as Timestamp;
+                                  }
 
-                                DateTime? startDate;
-                                if (startTimestamp != null) {
-                                  startDate = startTimestamp.toDate();
-                                }
+                                  DateTime? startDate;
+                                  if (startTimestamp != null) {
+                                    startDate = startTimestamp.toDate();
+                                  }
 
-                                Timestamp? endTimestamp;
-                                if (recordData != null &&
-                                    recordData.containsKey('end')) {
-                                  endTimestamp = recordData['end'] as Timestamp;
-                                }
+                                  Timestamp? endTimestamp;
+                                  if (recordData != null &&
+                                      recordData.containsKey('end')) {
+                                    endTimestamp =
+                                        recordData['end'] as Timestamp;
+                                  }
 
-                                DateTime? endDate;
-                                if (endTimestamp != null) {
-                                  endDate = endTimestamp.toDate();
-                                }
+                                  DateTime? endDate;
+                                  if (endTimestamp != null) {
+                                    endDate = endTimestamp.toDate();
+                                  }
 
-                                final dateFormatter = DateFormat('dd/MM/yyyy');
-                                final startDateFormat = startDate != null
-                                    ? dateFormatter.format(startDate)
-                                    : "Tiada Data";
-                                final endDateFormat = endDate != null
-                                    ? dateFormatter.format(endDate)
-                                    : "Tiada Data";
+                                  final dateFormatter =
+                                      DateFormat('dd/MM/yyyy');
+                                  final startDateFormat = startDate != null
+                                      ? dateFormatter.format(startDate)
+                                      : "Tiada Data";
+                                  final endDateFormat = endDate != null
+                                      ? dateFormatter.format(endDate)
+                                      : "Tiada Data";
 
-                                final titleDate = endDate != null
-                                    ? DateFormat('yyyy').format(endDate)
-                                    : (startDate != null
-                                        ? DateFormat('yyyy').format(startDate)
-                                        : "Tiada Data");
+                                  final titleDate = endDate != null
+                                      ? DateFormat('yyyy').format(endDate)
+                                      : (startDate != null
+                                          ? DateFormat('yyyy').format(startDate)
+                                          : "Tiada Data");
 
-                                final current =
-                                    recordData?['current'] ?? "Tiada Data";
-                                final delivery =
-                                    recordData?['delivery'] ?? "Tiada Data";
-                                final gender =
-                                    recordData?['gender'] ?? "Tiada Data";
-                                final pob = recordData?['pob'] ?? "Tiada Data";
-                                final weight =
-                                    recordData?['weight'] ?? "Tiada Data";
+                                  final current =
+                                      recordData?['current'] ?? "Tiada Data";
+                                  final delivery =
+                                      recordData?['delivery'] ?? "Tiada Data";
+                                  final gender =
+                                      recordData?['gender'] ?? "Tiada Data";
+                                  final pob =
+                                      recordData?['pob'] ?? "Tiada Data";
+                                  final weight =
+                                      recordData?['weight'] ?? "Tiada Data";
 
-                                return ExpansionTile(
-                                  title: Text(
-                                    titleDate,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Tarikh Hamil: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Text(
-                                                startDateFormat,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Tarikh Lahir: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Text(
-                                                endDateFormat,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Keadaan Anak: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Text(
-                                                current,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Jenis Kelahiran: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Text(
-                                                delivery,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Jantina: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Text(
-                                                gender,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Tempat Lahir: ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Flexible(
-                                                child: Text(
-                                                  pob,
+                                  return ExpansionTile(
+                                    title: Text(
+                                      titleDate,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Tarikh Hamil: ",
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18,
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.visible,
-                                                  textAlign: TextAlign.right,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Berat Lahir (kg): ",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
+                                                Text(
+                                                  startDateFormat,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                "$weight",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Tarikh Lahir: ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 20),
-                                        ],
+                                                Text(
+                                                  endDateFormat,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Keadaan Anak: ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  current,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Jenis Kelahiran: ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  delivery,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Jantina: ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  gender,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Tempat Lahir: ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  child: Text(
+                                                    pob,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Berat Lahir (kg): ",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "$weight",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 20),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                     ),
                     SizedBox(height: 800),
