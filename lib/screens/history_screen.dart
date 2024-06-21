@@ -70,7 +70,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                         final records = recordSnapshot.data!.docs;
 
-                        if (!records.contains('end')) {
+                        bool hasEndField = records.any((doc) =>
+                            (doc.data() as Map<String, dynamic>)
+                                .containsKey('end'));
+
+                        if (!hasEndField) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
