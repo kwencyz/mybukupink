@@ -35,54 +35,61 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  'Forum',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                content: Container(
-                  padding: EdgeInsets.all(5),
-                  width: 400,
-                  child: TextField(
-                    controller: _forumController,
-                    decoration: InputDecoration(
-                      hintText: 'Apa di fikiran anda?',
+      floatingActionButton: SizedBox(
+        width: 80,
+        height: 80,
+        child: FloatingActionButton(
+          backgroundColor: Color.fromRGBO(255, 53, 139, 1),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(
+                    'Forum',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Batal'),
+                  content: Container(
+                    padding: EdgeInsets.all(5),
+                    width: 400,
+                    child: TextField(
+                      controller: _forumController,
+                      decoration: InputDecoration(
+                        hintText: 'Apa di fikiran anda?',
+                      ),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      uploadForum(_forumController.text);
-                      if (Navigator.canPop(context)) {
+                  actions: [
+                    TextButton(
+                      onPressed: () {
                         Navigator.pop(context);
-                      }
-                    },
-                    child: Text('Muat Naik'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: SvgPicture.asset(
-          'assets/icons/community.svg',
-          width: 30,
-          height: 30,
+                      },
+                      child: Text('Batal'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        uploadForum(_forumController.text);
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text('Muat Naik'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: SvgPicture.asset(
+            'assets/icons/community.svg',
+            // ignore: deprecated_member_use
+            color: Colors.white,
+            width: 40,
+            height: 40,
+          ),
         ),
       ),
       body: Stack(
@@ -303,8 +310,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold)),
-                                                              Text(commentData[
-                                                                  'commentText'], style: TextStyle(fontSize: 16),),
+                                                              Text(
+                                                                commentData[
+                                                                    'commentText'],
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
