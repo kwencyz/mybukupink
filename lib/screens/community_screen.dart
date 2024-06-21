@@ -57,6 +57,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     width: 400,
                     child: TextField(
                       controller: _forumController,
+                      maxLines: null,
                       decoration: InputDecoration(
                         hintText: 'Apa di fikiran anda?',
                       ),
