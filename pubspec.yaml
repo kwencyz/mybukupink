@@ -34,10 +34,13 @@ flutter:
     - assets/images/
     - assets/images/splash.gif
     - assets/images/logo.png
+    - assets/images/logow.png
+    - assets/images/logo2.png
     - assets/images/word.png
     - assets/images/background.png
     - assets/images/pinkbg.png
     - assets/images/gradient.png
+    - assets/images/gradient2.png
     - assets/images/bukupink.jpeg
     - assets/icons/community.svg
     - assets/icons/home.svg

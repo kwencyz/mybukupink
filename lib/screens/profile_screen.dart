@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
+                image: AssetImage('assets/images/gradient2.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -75,11 +75,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fontWeight: FontWeight.bold, fontSize: 24),
                         ),
                       ),
-                      const SizedBox(width: 130),
+                      const SizedBox(width: 150),
                       Container(
                         alignment: Alignment.centerRight,
                         child: Image.asset(
-                          "assets/images/logo.png",
+                          "assets/images/logow.png",
                           width: 100,
                           height: 100,
                           fit: BoxFit.contain,

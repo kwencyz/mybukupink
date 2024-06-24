@@ -39,7 +39,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         width: 80,
         height: 80,
         child: FloatingActionButton(
-          backgroundColor: Color.fromRGBO(255, 53, 139, 1),
+          backgroundColor: Colors.white,
           onPressed: () {
             showDialog(
               context: context,
@@ -87,7 +87,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           child: SvgPicture.asset(
             'assets/icons/community.svg',
             // ignore: deprecated_member_use
-            color: Colors.white,
+            color: Color.fromRGBO(255, 53, 139, 1),
             width: 40,
             height: 40,
           ),
@@ -98,7 +98,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
+                image: AssetImage('assets/images/gradient2.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -108,11 +108,17 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   Container(
                     margin: const EdgeInsets.only(right: 20),
                     alignment: Alignment.centerRight,
-                    child: Image.asset(
-                      "assets/images/word.png",
-                      width: 150,
-                      height: 50,
-                      fit: BoxFit.contain,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30)),
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: Image.asset(
+                        "assets/images/word.png",
+                        width: 150,
+                        height: 50,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -122,8 +128,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     alignment: Alignment.centerLeft,
                     child: const Text(
                       "Komuniti Ibu Hamil",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.black),
                     ),
                   ),
                   Expanded(

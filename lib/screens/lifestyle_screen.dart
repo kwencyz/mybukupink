@@ -25,7 +25,7 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/pinkbg.png'),
+                image: AssetImage('assets/images/gradient2.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -36,11 +36,17 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                     Container(
                       margin: const EdgeInsets.only(right: 20),
                       alignment: Alignment.centerRight,
-                      child: Image.asset(
-                        "assets/images/word.png",
-                        width: 150,
-                        height: 50,
-                        fit: BoxFit.contain,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30)),
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: Image.asset(
+                          "assets/images/word.png",
+                          width: 150,
+                          height: 50,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -49,8 +55,8 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "Carian Popular",
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -67,27 +73,28 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                
-                          List<DocumentSnapshot>? articles = snapshot.data?.docs;
-                
+
+                          List<DocumentSnapshot>? articles =
+                              snapshot.data?.docs;
+
                           if (articles == null || articles.isEmpty) {
                             return Center(
                               child: Text('Tiada artikel ditemui'),
                             );
                           }
-                
+
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: articles.length,
                             itemBuilder: (context, index) {
                               var article = articles[index].data();
                               var articleMap = article as Map<String, dynamic>;
-                
+
                               return InkWell(
                                 onTap: () async {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
-                
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -147,8 +154,8 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "Aktiviti Senaman",
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -167,27 +174,28 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                
-                          List<DocumentSnapshot>? articles = snapshot.data?.docs;
-                
+
+                          List<DocumentSnapshot>? articles =
+                              snapshot.data?.docs;
+
                           if (articles == null || articles.isEmpty) {
                             return Center(
                               child: Text('No articles found'),
                             );
                           }
-                
+
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: articles.length,
                             itemBuilder: (context, index) {
                               var article = articles[index].data();
                               var articleMap = article as Map<String, dynamic>;
-                
+
                               return InkWell(
                                 onTap: () async {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
-                
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -247,8 +255,8 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "Gaya Pemakanan",
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -267,15 +275,16 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                
-                          List<DocumentSnapshot>? articles = snapshot.data?.docs;
-                
+
+                          List<DocumentSnapshot>? articles =
+                              snapshot.data?.docs;
+
                           if (articles == null || articles.isEmpty) {
                             return Center(
                               child: Text('No articles found'),
                             );
                           }
-                
+
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: articles.length,
@@ -286,7 +295,7 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                                 onTap: () async {
                                   var articleDoc = snapshot.data!.docs[index];
                                   var articleId = articleDoc.id;
-                
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
