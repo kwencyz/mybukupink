@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mybukupink/screens/appointment_screen.dart';
 import 'package:mybukupink/screens/history_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -228,51 +229,138 @@ class _HomeScreenState extends State<HomeScreen> {
                         final status = data['status'];
 
                         if (status == "tidak hamil") {
+                          FutureBuilder<QuerySnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('records')
+                                  .where('uid', isEqualTo: user.uid)
+                                  .get(),
+                              builder: (context, recordSnapshot) {
+                                if (recordSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+
+                                if (!recordSnapshot.hasData ||
+                                    recordSnapshot.data!.docs.isEmpty) {
+                                  return Text("");
+                                } else {
+                                  return Column();
+                                }
+                              });
                           return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(
-                                'assets/images/pregnant.png',
-                                width: 400,
-                              ),
-                              Text(
-                                "Selamat Datang Ke MyBukuPink",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              SizedBox(height: 10),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "Selamat Datang Ke",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
                               ),
                               Container(
-                                width: 400,
-                                padding: EdgeInsets.all(5),
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.only(left: 20),
                                 child: Text(
-                                  "Kami di sini untuk menyokong anda dalam setiap langkah perjalanan kehamilan anda.",
+                                  "MyBukuPink",
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
-                                  textAlign: TextAlign.center,
+                                  textAlign: TextAlign.left,
                                 ),
                               ),
-                              SizedBox(height: 20),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size.fromWidth(400),
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HistoryScreen()),
-                                  );
+                              FutureBuilder<QuerySnapshot>(
+                                future: FirebaseFirestore.instance
+                                    .collection('records')
+                                    .where('uid', isEqualTo: user.uid)
+                                    .get(),
+                                builder: (context, recordSnapshot) {
+                                  if (recordSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+
+                                  if (!recordSnapshot.hasData ||
+                                      recordSnapshot.data!.docs.isEmpty) {
+                                    return Text("");
+                                  } else {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 30),
+                                        Text(
+                                          "Periksa Sejarah Kehamilan:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        SizedBox(height: 10),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: Size(400, 50),
+                                            backgroundColor: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HistoryScreen()),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Sejarah Kehamilan',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  255, 53, 139, 1),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
                                 },
-                                child: Text(
-                                  'Sejarah Kehamilan',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(255, 53, 139, 1),
-                                    fontSize: 16,
+                              ),
+                              Image.asset(
+                                'assets/images/pregnant.png',
+                                width: 300,
+                              ),
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    child: Text(
+                                      "Ketahui lebih lanjut mengenai Buku Pink",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(height: 10),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      final Uri url = Uri.parse(
+                                          "https://ecentral.my/buku-pink/");
+                                      launchUrl(url);
+                                    },
+                                    child: Text('Buku Pink',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold
+                                    ),),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 100),
                             ],
@@ -366,67 +454,72 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 20),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(200, 50),
-                                              backgroundColor: Colors.white,
-                                            ),
-                                            onPressed: () async {
-                                              final records =
-                                                  await fetchRecords();
-                                              if (records.isNotEmpty) {
-                                                final recordsId =
-                                                    records.first.id;
-                                                Navigator.push(
+                                          Container(
+                                            padding: EdgeInsets.only(right: 30),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                fixedSize: Size(210, 50),
+                                                backgroundColor: Colors.white,
+                                              ),
+                                              onPressed: () async {
+                                                final records =
+                                                    await fetchRecords();
+                                                if (records.isNotEmpty) {
+                                                  final recordsId =
+                                                      records.first.id;
+                                                  Navigator.push(
+                                                    // ignore: use_build_context_synchronously
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AppointmentScreen(
+                                                              recordsId:
+                                                                  recordsId),
+                                                    ),
+                                                  );
+                                                } else {
                                                   // ignore: use_build_context_synchronously
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AppointmentScreen(
-                                                            recordsId:
-                                                                recordsId),
-                                                  ),
-                                                );
-                                              } else {
-                                                // ignore: use_build_context_synchronously
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                      content: Text(
-                                                          'Tiada Rekod Ditemui')),
-                                                );
-                                              }
-                                            },
-                                            child: Text(
-                                              'Rekod Temujanji',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    255, 53, 139, 1),
-                                                fontSize: 16,
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'Tiada Rekod Ditemui')),
+                                                  );
+                                                }
+                                              },
+                                              child: Text(
+                                                'Rekod Temujanji',
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      255, 53, 139, 1),
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),
                                           SizedBox(height: 10),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(200, 50),
-                                              backgroundColor: Colors.white,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HistoryScreen()),
-                                              );
-                                            },
-                                            child: Text(
-                                              'Sejarah Kehamilan',
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    255, 53, 139, 1),
-                                                fontSize: 16,
+                                          Container(
+                                            padding: EdgeInsets.only(right: 30),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                fixedSize: Size(210, 50),
+                                                backgroundColor: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HistoryScreen()),
+                                                );
+                                              },
+                                              child: Text(
+                                                'Sejarah Kehamilan',
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      255, 53, 139, 1),
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),

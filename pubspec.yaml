@@ -38,6 +38,7 @@ flutter:
     - assets/images/background.png
     - assets/images/pinkbg.png
     - assets/images/gradient.png
+    - assets/images/bukupink.jpeg
     - assets/icons/community.svg
     - assets/icons/home.svg
     - assets/icons/lifestyle.svg
