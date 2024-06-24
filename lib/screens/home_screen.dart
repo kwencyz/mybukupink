@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/background.png'),
+                  image: AssetImage('assets/images/gradient.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -189,11 +189,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       margin: const EdgeInsets.only(right: 20),
                       alignment: Alignment.centerRight,
-                      child: Image.asset(
-                        "assets/images/word.png",
-                        width: 150,
-                        height: 50,
-                        fit: BoxFit.contain,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30)),
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: Image.asset(
+                          "assets/images/word.png",
+                          width: 150,
+                          height: 50,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -309,36 +315,140 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               return Column(
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 30, right: 20),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Anda telah hamil selama",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(56, 56, 56, 1),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 30, right: 20, bottom: 20),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "$weeks Minggu",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(56, 56, 56, 1),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 40,
-                                      ),
-                                    ),
-                                  ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
                                     children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Image.asset(
+                                          "assets/images/pregnant.png",
+                                          width: 200,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(right: 30),
+                                            child: Text(
+                                              "Anda telah hamil selama",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
+                                                child: Text(
+                                                  weeks.toString(),
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 70,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    EdgeInsets.only(right: 30),
+                                                child: Text(
+                                                  "Minggu",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 20),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(200, 50),
+                                              backgroundColor: Colors.white,
+                                            ),
+                                            onPressed: () async {
+                                              final records =
+                                                  await fetchRecords();
+                                              if (records.isNotEmpty) {
+                                                final recordsId =
+                                                    records.first.id;
+                                                Navigator.push(
+                                                  // ignore: use_build_context_synchronously
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AppointmentScreen(
+                                                            recordsId:
+                                                                recordsId),
+                                                  ),
+                                                );
+                                              } else {
+                                                // ignore: use_build_context_synchronously
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                          'Tiada Rekod Ditemui')),
+                                                );
+                                              }
+                                            },
+                                            child: Text(
+                                              'Rekod Temujanji',
+                                              style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    255, 53, 139, 1),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(200, 50),
+                                              backgroundColor: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HistoryScreen()),
+                                              );
+                                            },
+                                            child: Text(
+                                              'Sejarah Kehamilan',
+                                              style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    255, 53, 139, 1),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 100,
+                                        child: Text(
+                                          "Anda berada di Trimester",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
                                       ElevatedButton(
                                         onPressed: () {
                                           setState(() {
@@ -353,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : Colors.grey,
                                         ),
                                         child: Text(
-                                          'Trimester 1',
+                                          'Pertama',
                                           style: TextStyle(
                                             color: selectedTrimesterIndex == 0
                                                 ? Colors.white
@@ -375,7 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : Colors.grey,
                                         ),
                                         child: Text(
-                                          'Trimester 2',
+                                          'Kedua',
                                           style: TextStyle(
                                             color: selectedTrimesterIndex == 1
                                                 ? Colors.white
@@ -397,7 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : Colors.grey,
                                         ),
                                         child: Text(
-                                          'Trimester 3',
+                                          'Ketiga',
                                           style: TextStyle(
                                             color: selectedTrimesterIndex == 2
                                                 ? Colors.white
@@ -466,63 +576,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         'assets/images/trimester.gif'),
                                   ),
                                   SizedBox(height: 20),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size.fromWidth(400),
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    onPressed: () async {
-                                      final records = await fetchRecords();
-                                      if (records.isNotEmpty) {
-                                        final recordsId = records.first.id;
-                                        Navigator.push(
-                                          // ignore: use_build_context_synchronously
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AppointmentScreen(
-                                                    recordsId: recordsId),
-                                          ),
-                                        );
-                                      } else {
-                                        // ignore: use_build_context_synchronously
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text('Tiada Rekod Ditemui')),
-                                        );
-                                      }
-                                    },
-                                    child: Text(
-                                      'Rekod Temujanji',
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(255, 53, 139, 1),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size.fromWidth(400),
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HistoryScreen()),
-                                      );
-                                    },
-                                    child: Text(
-                                      'Sejarah Kehamilan',
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(255, 53, 139, 1),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
                                   SizedBox(height: 50),
                                 ],
                               );
