@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _checkStatusAndCalculate();
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _checkAndShowMessage();
     });
   }
@@ -63,12 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
         final status = data?['status'];
 
         if (status == 'tidak hamil') {
-          _showPopupMessage("Selamat Datang", "Sila hadir ke klinik kesihatan sekiranya anda hamil.");
+          _showPopupMessage("Selamat Datang",
+              "Sila hadir ke klinik kesihatan sekiranya anda hamil.");
         }
       }
 
       await prefs.setBool('hasShownMessage', true);
     }
+  }
+
+  Future<List<QueryDocumentSnapshot>> fetchRecords() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('records')
+        .where('uid', isEqualTo: user.uid)
+        .get();
+    return snapshot.docs
+        .where((doc) => !doc.data().containsKey('end'))
+        .toList();
   }
 
   void _showPopupMessage(String title, String content) {
@@ -460,13 +471,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fixedSize: Size.fromWidth(400),
                                       backgroundColor: Colors.white,
                                     ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
+                                    onPressed: () async {
+                                      final records = await fetchRecords();
+                                      if (records.isNotEmpty) {
+                                        final recordsId = records.first.id;
+                                        Navigator.push(
+                                          // ignore: use_build_context_synchronously
+                                          context,
+                                          MaterialPageRoute(
                                             builder: (context) =>
-                                                AppointmentScreen()),
-                                      );
+                                                AppointmentScreen(
+                                                    recordsId: recordsId),
+                                          ),
+                                        );
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content:
+                                                  Text('Tiada Rekod Ditemui')),
+                                        );
+                                      }
                                     },
                                     child: Text(
                                       'Rekod Temujanji',

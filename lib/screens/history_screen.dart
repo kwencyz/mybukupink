@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mybukupink/screens/appointment_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -65,7 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                         if (!recordSnapshot.hasData ||
                             recordSnapshot.data!.docs.isEmpty) {
-                          return Text("No record data found.");
+                          return Text("Tiada Sejarah Kehamilan Tersedia");
                         }
 
                         final records = recordSnapshot.data!.docs
@@ -153,202 +154,367 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       recordData?['pob'] ?? "Tiada Data";
                                   final weight =
                                       recordData?['weight'] ?? "Tiada Data";
+                                  final result =
+                                      recordData?['result'] ?? "Tiada Data";
 
-                                  return Theme(
-                                    data: Theme.of(context).copyWith(
-                                      dividerColor: Colors.transparent,
-                                    ),
-                                    child: ExpansionTile(
-                                      title: Text(
-                                        titleDate,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
+                                  final recordsId =
+                                      recordData?['recordsId'] ?? "Tiada Data";
+
+                                  if (result == 'Keguguran') {
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        dividerColor: Colors.transparent,
                                       ),
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Tarikh Hamil: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    startDateFormat,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Tarikh Lahir: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    endDateFormat,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Keadaan Anak: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    current,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Jenis Kelahiran: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    delivery,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Jantina: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    gender,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Tempat Lahir: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Flexible(
-                                                    child: Text(
-                                                      pob,
+                                      child: ExpansionTile(
+                                        title: Text(
+                                          titleDate,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Tarikh Hamil: ",
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 18,
                                                       ),
-                                                      overflow:
-                                                          TextOverflow.visible,
-                                                      textAlign:
-                                                          TextAlign.right,
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      startDateFormat,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Hasil Kandungan: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      result,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                GestureDetector(
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    padding: EdgeInsets.all(15),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.pink,
+                                                    ),
+                                                    child: Text(
+                                                      'Lihat Rekod Pemeriksaan',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Berat Lahir: ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    "$weight kg",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(),
-                                              SizedBox(height: 20),
-                                            ],
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AppointmentScreen(
+                                                          recordsId: recordsId,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(height: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        dividerColor: Colors.transparent,
+                                      ),
+                                      child: ExpansionTile(
+                                        title: Text(
+                                          titleDate,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  );
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Tarikh Hamil: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      startDateFormat,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Tarikh Lahir: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      endDateFormat,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Hasil Kandungan: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      result,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Keadaan Anak: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      current,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Jenis Kelahiran: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      delivery,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Jantina: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      gender,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      "Tempat Lahir: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      child: Text(
+                                                        pob,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .visible,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Berat Lahir: ",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      "$weight kg",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                SizedBox(height: 10),
+                                                GestureDetector(
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    padding: EdgeInsets.all(15),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.pink,
+                                                    ),
+                                                    child: Text(
+                                                      'Lihat Rekod Pemeriksaan',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AppointmentScreen(
+                                                          recordsId: recordsId,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(height: 10),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
                                 },
                               ),
                             ),

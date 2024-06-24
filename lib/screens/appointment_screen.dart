@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:mybukupink/screens/checkup_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
-  const AppointmentScreen({super.key});
+  final String recordsId;
+
+  const AppointmentScreen({Key? key, required this.recordsId})
+      : super(key: key);
 
   @override
   State<AppointmentScreen> createState() => _AppointmentScreenState();
@@ -14,6 +17,27 @@ class AppointmentScreen extends StatefulWidget {
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+
+  Map<String, dynamic>? checkupData;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCheckupData();
+  }
+
+  Future<void> _fetchCheckupData() async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('appointment')
+        .where('recordsId', isEqualTo: widget.recordsId)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      setState(() {
+        checkupData = snapshot.docs[0].data() as Map<String, dynamic>?;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,33 +96,38 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       final difference = now.difference(startDate);
                       final weeks = (difference.inDays / 7).floor();
 
-                      return Column(children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 30, right: 20),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Anda telah hamil selama",
-                            style: TextStyle(
-                              color: Color.fromRGBO(56, 56, 56, 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                      final status = data?['status'] ?? '';
+
+                      if (status == 'hamil') {
+                        return Column(children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 30, right: 20),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Anda telah hamil selama",
+                              style: TextStyle(
+                                color: Color.fromRGBO(56, 56, 56, 1),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 30, right: 20, bottom: 10),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "$weeks Minggu",
-                            style: TextStyle(
-                              color: Color.fromRGBO(56, 56, 56, 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40,
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 30, right: 20, bottom: 10),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "$weeks Minggu",
+                              style: TextStyle(
+                                color: Color.fromRGBO(56, 56, 56, 1),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                              ),
                             ),
-                          ),
-                        )
-                      ]);
+                          )
+                        ]);
+                      }
+                      return Container();
                     },
                   ),
                   Container(
@@ -115,7 +144,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('appointment')
-                          .where('uid', isEqualTo: user.uid)
+                          .where('recordsId', isEqualTo: widget.recordsId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
