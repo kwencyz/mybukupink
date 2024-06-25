@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_final_fields
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/gradient.png'),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                 ),
               ),
               child: SafeArea(
@@ -332,35 +332,135 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                 },
                               ),
-                              Image.asset(
-                                'assets/images/pregnant.png',
-                                width: 300,
-                              ),
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Ketahui lebih lanjut mengenai Buku Pink",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                              Container(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                height: 550,
+                                child: PageView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    // First item
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/pregnant.png',
+                                            height: 400,
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "Ketahui lebih lanjut mengenai Buku Pink",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              final Uri url = Uri.parse(
+                                                  "https://ecentral.my/buku-pink/");
+                                              launchUrl(url);
+                                            },
+                                            child: Text(
+                                              'Buku Pink',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 30,
+                                                height: 10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Container(
+                                                width: 10,
+                                                height: 10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey,
+                                                    shape: BoxShape.circle),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      final Uri url = Uri.parse(
-                                          "https://ecentral.my/buku-pink/");
-                                      launchUrl(url);
-                                    },
-                                    child: Text('Buku Pink',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold
-                                    ),),
-                                  ),
-                                ],
+                                    // Second item
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/fetus.png',
+                                            height: 400,
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "Ketahui simptom-simptom hamil",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              final Uri url = Uri.parse(
+                                                  "https://hellodoktor.com/kehamilan/tips-hamil/masalah-kehamilan/tanda-tanda-mengandung/");
+                                              launchUrl(url);
+                                            },
+                                            child: Text(
+                                              'Simptom Hamil',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 10,
+                                                height: 10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey,
+                                                    shape: BoxShape.circle),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Container(
+                                                width: 30,
+                                                height: 10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 100),
                             ],
@@ -647,7 +747,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ['article']!,
                                           textAlign: TextAlign.justify,
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color:
                                                 Color.fromRGBO(56, 56, 56, 1),
@@ -668,8 +768,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Image.asset(
                                         'assets/images/trimester.gif'),
                                   ),
-                                  SizedBox(height: 20),
-                                  SizedBox(height: 50),
+                                  SizedBox(height: 70),
                                 ],
                               );
                             },

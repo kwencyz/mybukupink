@@ -98,7 +98,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/gradient2.png'),
+                image: AssetImage('assets/images/pinkbg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -109,9 +109,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     margin: const EdgeInsets.only(right: 20),
                     alignment: Alignment.centerRight,
                     child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30)),
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: Image.asset(
                         "assets/images/word.png",
@@ -339,6 +336,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       right: 20,
                                                       bottom: 20),
                                                   child: TextField(
+                                                    maxLines: null,
                                                     controller:
                                                         _commentControllers
                                                             .putIfAbsent(

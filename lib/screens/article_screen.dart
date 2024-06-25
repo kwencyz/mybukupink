@@ -66,7 +66,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
                       ),
                       Positioned(
                         top: 5,
-                        left: 10,
+                        left: 50,
                         child: Image.asset(
                           "assets/images/word.png",
                           width: 150,

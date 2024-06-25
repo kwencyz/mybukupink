@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/gradient2.png'),
+                image: AssetImage('assets/images/pinkbg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         alignment: Alignment.centerRight,
                         child: Image.asset(
-                          "assets/images/logow.png",
+                          "assets/images/logo.png",
                           width: 100,
                           height: 100,
                           fit: BoxFit.contain,
@@ -269,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: GestureDetector(
                         child: Text(
-                          'Riwayat Kesihatan Ibu',
+                          'Rekod Kesihatan Ibu',
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,

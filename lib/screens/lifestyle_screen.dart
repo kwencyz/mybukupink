@@ -25,7 +25,7 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/gradient2.png'),
+                image: AssetImage('assets/images/pinkbg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -37,9 +37,6 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                       margin: const EdgeInsets.only(right: 20),
                       alignment: Alignment.centerRight,
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30)),
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: Image.asset(
                           "assets/images/word.png",
@@ -85,7 +82,8 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
 
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: articles.length,
+                            itemCount:
+                                articles.length > 5 ? 5 : articles.length,
                             itemBuilder: (context, index) {
                               var article = articles[index].data();
                               var articleMap = article as Map<String, dynamic>;
