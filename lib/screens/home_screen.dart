@@ -297,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         SizedBox(height: 30),
                                         Text(
-                                          "Periksa Sejarah Kehamilan:",
+                                          "Lihat Sejarah Kehamilan:",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
@@ -318,13 +318,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       HistoryScreen()),
                                             );
                                           },
-                                          child: Text(
-                                            'Sejarah Kehamilan',
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  255, 53, 139, 1),
-                                              fontSize: 16,
-                                            ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                  "assets/icons/history.png",
+                                                  width: 20),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Sejarah Kehamilan',
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      255, 53, 139, 1),
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -342,7 +352,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Image.asset(
                                             'assets/images/pregnant.png',
@@ -515,17 +526,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Spacer(),
                                       Column(
                                         children: [
-                                          Container(
-                                            padding: EdgeInsets.only(right: 30),
-                                            child: Text(
-                                              "Anda telah hamil selama",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          ),
                                           Row(
                                             children: [
                                               Container(
@@ -536,24 +536,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 70,
+                                                    fontSize: 80,
                                                   ),
                                                 ),
                                               ),
-                                              Container(
-                                                padding:
-                                                    EdgeInsets.only(right: 30),
-                                                child: Text(
-                                                  "Minggu",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30,
+                                              Column(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        right: 30),
+                                                    child: Text(
+                                                      "Minggu",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 30,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        right: 30),
+                                                    child: Text(
+                                                      "Kehamilan",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
+                                          SizedBox(height: 10),
                                           Container(
                                             padding: EdgeInsets.only(right: 30),
                                             child: ElevatedButton(
@@ -587,13 +606,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   );
                                                 }
                                               },
-                                              child: Text(
-                                                'Rekod Temujanji',
-                                                style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      255, 53, 139, 1),
-                                                  fontSize: 16,
-                                                ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                      "assets/icons/record.png",
+                                                      width: 20),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    'Rekod Temujanji',
+                                                    style: TextStyle(
+                                                      color: Color.fromRGBO(
+                                                          255, 53, 139, 1),
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
@@ -613,13 +642,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           HistoryScreen()),
                                                 );
                                               },
-                                              child: Text(
-                                                'Sejarah Kehamilan',
-                                                style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      255, 53, 139, 1),
-                                                  fontSize: 16,
-                                                ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                      "assets/icons/history.png",
+                                                      width: 20),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    'Sejarah Kehamilan',
+                                                    style: TextStyle(
+                                                      color: Color.fromRGBO(
+                                                          255, 53, 139, 1),
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),

@@ -336,7 +336,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       right: 20,
                                                       bottom: 20),
                                                   child: TextField(
-                                                    maxLines: null,
+                                                    /* maxLines: null,
+                                                    textInputAction:
+                                                        TextInputAction
+                                                            .newline, */
                                                     controller:
                                                         _commentControllers
                                                             .putIfAbsent(
@@ -344,28 +347,37 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                       () =>
                                                           TextEditingController(),
                                                     ),
-                                                    decoration: InputDecoration(
-                                                      hintStyle: TextStyle(
-                                                          fontSize: 14),
+                                                    decoration:
+                                                        InputDecoration(
+                                                      hintStyle:
+                                                          TextStyle(
+                                                              fontSize:
+                                                                  14),
                                                       hintText:
                                                           'Add a comment...',
                                                       contentPadding:
                                                           EdgeInsets.only(
                                                               left: 10),
                                                     ),
-                                                    onSubmitted: (comment) {
-                                                      // Add the comment to the Firestore 'comment' collection
-                                                      FirebaseFirestore.instance
-                                                          .collection('comment')
+                                                    onSubmitted:
+                                                        (comment) {
+                                                      FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'comment')
                                                           .add({
-                                                        'forumId': document.id,
+                                                        'forumId':
+                                                            document.id,
                                                         'uid': user.uid,
-                                                        'commentText': comment,
+                                                        'commentText':
+                                                            comment,
                                                         'timestamp':
-                                                            DateTime.now(),
+                                                            DateTime
+                                                                .now(),
                                                       });
                                                       _commentControllers[
-                                                              document.id]!
+                                                              document
+                                                                  .id]!
                                                           .clear();
                                                     },
                                                   ),

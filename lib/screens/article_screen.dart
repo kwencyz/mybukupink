@@ -114,52 +114,60 @@ class _ArticleScreenState extends State<ArticleScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Color.fromRGBO(255, 53, 139, 1),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                // Navigate to the articleURL when the button is pressed
-                                launchUrl(url);
-                              },
-                              child: Text(
-                                'Artikel Penuh',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ),
                           SizedBox(height: 10),
-                          Text(
-                            articleTitle ?? 'Article Title',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'oleh ',
+                                articleTitle ?? 'Article Title',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 25,
                                 ),
                               ),
-                              Text(
-                                articleAuthor ?? '-',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'oleh ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    articleAuthor ?? '-',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                /* fixedSize: Size(180, 50), */
+                                backgroundColor:
+                                    Color.fromRGBO(255, 53, 139, 1)),
+                            onPressed: () {
+                              launchUrl(url);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset("assets/icons/link.png", width: 20),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Artikel Penuh',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       );

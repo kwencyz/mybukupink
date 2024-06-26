@@ -24,7 +24,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
+                image: AssetImage('assets/images/pinkbg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -227,35 +227,55 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                 ),
                                                 Divider(),
                                                 SizedBox(height: 10),
-                                                GestureDetector(
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    padding: EdgeInsets.all(15),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.pink,
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      fixedSize: Size(210, 50),
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      side: BorderSide(
+                                                          color: Colors.pink,
+                                                          width: 1),
                                                     ),
-                                                    child: Text(
-                                                      'Lihat Rekod Pemeriksaan',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                      ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AppointmentScreen(
+                                                            recordsId:
+                                                                recordsId,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                            "assets/icons/record.png",
+                                                            width: 20),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          'Rekod Pemeriksaan',
+                                                          style: TextStyle(
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    255,
+                                                                    53,
+                                                                    139,
+                                                                    1),
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            AppointmentScreen(
-                                                          recordsId: recordsId,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
                                                 ),
                                                 SizedBox(height: 10),
                                               ],
@@ -477,35 +497,55 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                 ),
                                                 Divider(),
                                                 SizedBox(height: 10),
-                                                GestureDetector(
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    padding: EdgeInsets.all(15),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.pink,
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      fixedSize: Size(210, 50),
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      side: BorderSide(
+                                                          color: Colors.pink,
+                                                          width: 1),
                                                     ),
-                                                    child: Text(
-                                                      'Lihat Rekod Pemeriksaan',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                      ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AppointmentScreen(
+                                                            recordsId:
+                                                                recordsId,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                            "assets/icons/record.png",
+                                                            width: 20),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          'Rekod Pemeriksaan',
+                                                          style: TextStyle(
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    255,
+                                                                    53,
+                                                                    139,
+                                                                    1),
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            AppointmentScreen(
-                                                          recordsId: recordsId,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
                                                 ),
                                                 SizedBox(height: 10),
                                               ],
