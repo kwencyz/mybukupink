@@ -153,7 +153,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         }
 
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Text("No appointments found.");
+                          return Text("Tiada temujanji dijumpai");
                         }
 
                         return ListView.builder(

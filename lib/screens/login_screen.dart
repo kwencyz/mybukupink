@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback showRegisterScreen;
-  const LoginScreen({Key? key,required this.showRegisterScreen}): super(key: key);
+  const LoginScreen({Key? key, required this.showRegisterScreen})
+      : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -72,6 +73,14 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
+  bool _isPasswordVisible = false;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,11 +139,20 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 child: TextField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Kata Laluan',
-                      contentPadding: EdgeInsets.all(10.0)),
+                    border: InputBorder.none,
+                    hintText: 'Kata Laluan',
+                    contentPadding: EdgeInsets.all(10.0),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -144,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen>
             //sign in button
 
             Container(
-              padding: EdgeInsets.only(left: 30,right: 30),
+              padding: EdgeInsets.only(left: 30, right: 30),
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(

@@ -27,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Update _userEmail with the fetched email
       setState(() {
         _userName = documentSnapshot['name'];
-        _userEmail = documentSnapshot['email'];
+        _userPhone = documentSnapshot['phone'];
       });
     } catch (e) {
       print('Error fetching patient data: $e');
@@ -36,13 +36,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   late String _userName = 'Loading...';
-  late String _userEmail = 'Loading...';
+  late String _userPhone = 'Loading...';
 
   @override
   void initState() {
     super.initState();
     fetchPatientData();
   }
+  
 
   String imageUrl = '';
 
@@ -151,16 +152,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
-                                  softWrap: true,
                                 ),
                                 Text(
-                                  _userEmail,
+                                  _userPhone,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
-                                  softWrap: true,
                                 ),
                               ],
                             ),
@@ -241,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Container(
                     width: 150,
                     height: 50,
-                    padding: EdgeInsets.only(left: 15,right: 15),
+                    padding: EdgeInsets.only(left: 15, right: 15),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(255, 53, 139, 1),
                       borderRadius: BorderRadius.circular(20),
