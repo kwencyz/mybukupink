@@ -143,9 +143,9 @@ class _LoginScreenState extends State<LoginScreen>
 
             //sign in button
 
-            SizedBox(
-              height: 45,
-              width: 350,
+            Container(
+              padding: EdgeInsets.only(left: 30,right: 30),
+              width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(255, 53, 139, 1),

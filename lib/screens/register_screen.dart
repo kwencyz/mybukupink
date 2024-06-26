@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   final VoidCallback showLoginScreen;
@@ -16,13 +17,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _icController = TextEditingController();
-  final _etnikController = TextEditingController();
-  final _nationalController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _icController = TextEditingController();
+  final TextEditingController _etnikController = TextEditingController();
+  final TextEditingController _nationalController = TextEditingController();
 
   @override
   void dispose() {
@@ -54,6 +55,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       },
     );
+  }
+
+  String _phoneErrorMessage = '';
+  String _icErrorMessage = '';
+  String _emailErrorMessage = '';
+
+  void _validatePhoneNumber(String value) {
+    if (!value.startsWith('0') || value.length > 11) {
+      setState(() {
+        _phoneErrorMessage =
+            'No. telefon mesti bermula dengan 0 dan tidak melebihi 11 digit';
+      });
+    } else {
+      setState(() {
+        _phoneErrorMessage = '';
+      });
+    }
+  }
+
+  void _validateIc(String value) {
+    if (!(value.length == 12)) {
+      setState(() {
+        _icErrorMessage = 'No. Kad Pengenalan mesti 12 digit';
+      });
+    } else {
+      setState(() {
+        _icErrorMessage = '';
+      });
+    }
+  }
+
+  void _validateEmail(String value) {
+    const pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+    final regExp = RegExp(pattern);
+
+    if (!regExp.hasMatch(value)) {
+      setState(() {
+        _emailErrorMessage = 'Sila masukkan emel yang sah';
+      });
+    } else {
+      setState(() {
+        _emailErrorMessage = '';
+      });
+    }
+  }
+
+  bool _isPasswordVisible = false;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
   }
 
   Future<void> signUp() async {
@@ -104,7 +157,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _showErrorDialog('Email sudah digunakan. Sila gunakan email lain.');
       } else {
         print('Error signing up: $e');
-        // Handle other errors: display error message to the user
+        _showErrorDialog(
+            'Tidak boleh mendaftar. Sila periksa setiap ruangan diisi dengan betul.');
       }
     }
   }
@@ -155,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _nameController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Nama Ibu',
+                      labelText: 'Nama Ibu',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
@@ -174,10 +228,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 child: TextField(
                   controller: _phoneController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Nombor Telefon',
-                      contentPadding: EdgeInsets.all(10.0)),
+                    border: InputBorder.none,
+                    labelText: 'Nombor Telefon',
+                    errorText: _phoneErrorMessage.isNotEmpty ? _phoneErrorMessage : null,
+                    contentPadding: EdgeInsets.all(10.0),
+                  ),
+                  onChanged: _validatePhoneNumber,
                 ),
               ),
             ),
@@ -195,10 +257,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 child: TextField(
                   controller: _icController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(12),
+                  ],
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'No. Kad Pengenalan',
-                      contentPadding: EdgeInsets.all(10.0)),
+                    border: InputBorder.none,
+                    labelText: 'No. Kad Pengenalan',
+                    errorText: _icErrorMessage.isNotEmpty ? _icErrorMessage : null,
+                    contentPadding: EdgeInsets.all(10.0),
+                  ),
+                  onChanged: _validateIc,
                 ),
               ),
             ),
@@ -217,9 +287,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Emel',
-                      contentPadding: EdgeInsets.all(10.0)),
+                    border: InputBorder.none,
+                    labelText: 'Emel',
+                    errorText: _emailErrorMessage.isNotEmpty ? _emailErrorMessage : null,
+                    contentPadding: EdgeInsets.all(10.0),
+                  ),
+                  onChanged: _validateEmail,
                 ),
               ),
             ),
@@ -237,11 +310,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 child: TextField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Kata Laluan',
-                      contentPadding: EdgeInsets.all(10.0)),
+                    border: InputBorder.none,
+                    labelText: 'Kata Laluan',
+                    contentPadding: EdgeInsets.all(10.0),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -261,7 +343,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _etnikController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Etnik',
+                      labelText: 'Etnik',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
@@ -282,7 +364,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _nationalController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Warganegara',
+                      labelText: 'Warganegara',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
@@ -291,9 +373,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SizedBox(height: 100),
 
             //sign in button
-            SizedBox(
-              height: 45,
-              width: 350,
+            Container(
+              padding: EdgeInsets.only(left: 30, right: 30),
+              width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(255, 53, 139, 1),
@@ -333,7 +415,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Text(' sekarang!'),
               ],
-            )
+            ),
+            SizedBox(height: 50),
           ]),
         ),
       ),

@@ -169,13 +169,21 @@ class _UserScreenState extends State<UserScreen> {
                                     print('Error uploading image: $error');
                                   }
                                 },
-                                child: Text(
-                                  'Kemaskini Gambar Profil',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Kemaskini Gambar Profil',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Image.asset("assets/icons/edit.png",
+                                        width: 20),
+                                  ],
                                 ),
                               ),
                             ],
@@ -560,13 +568,22 @@ class _UserScreenState extends State<UserScreen> {
                                                 'Error uploading image: $error');
                                           }
                                         },
-                                        child: Text(
-                                          'Kemaskini Gambar Profil',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Kemaskini Gambar Profil',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Image.asset("assets/icons/edit.png",
+                                                width: 20),
+                                          ],
                                         ),
                                       ),
                                     ],

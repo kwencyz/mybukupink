@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mybukupink/screens/user_screen.dart';
 import 'package:uuid/uuid.dart';
 
@@ -53,6 +54,34 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
         );
       },
     );
+  }
+
+  String _phoneErrorMessage = '';
+  String _icErrorMessage = '';
+
+  void _validatePhoneNumber(String value) {
+    if (!value.startsWith('0') || value.length > 11) {
+      setState(() {
+        _phoneErrorMessage =
+            'No. telefon mesti bermula dengan 0 dan tidak melebihi 11 digit';
+      });
+    } else {
+      setState(() {
+        _phoneErrorMessage = '';
+      });
+    }
+  }
+
+  void _validateIc(String value) {
+    if (!(value.length == 12)) {
+      setState(() {
+        _icErrorMessage = 'No. Kad Pengenalan mesti 12 digit';
+      });
+    } else {
+      setState(() {
+        _icErrorMessage = '';
+      });
+    }
   }
 
   Future<void> updateHusband() async {
@@ -143,7 +172,7 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
                   controller: _nameController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Nama Bapa',
+                      labelText: 'Nama Bapa',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
@@ -162,10 +191,19 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
                 ),
                 child: TextField(
                   controller: _phoneController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Nombor Telefon',
+                      labelText: 'Nombor Telefon',
+                      errorText: _phoneErrorMessage.isNotEmpty
+                          ? _phoneErrorMessage
+                          : null,
                       contentPadding: EdgeInsets.all(10.0)),
+                  onChanged: _validatePhoneNumber,
                 ),
               ),
             ),
@@ -183,10 +221,18 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
                 ),
                 child: TextField(
                   controller: _icController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(12),
+                  ],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'No. Kad Pengenalan',
+                      labelText: 'No. Kad Pengenalan',
+                      errorText:
+                          _icErrorMessage.isNotEmpty ? _icErrorMessage : null,
                       contentPadding: EdgeInsets.all(10.0)),
+                  onChanged: _validateIc,
                 ),
               ),
             ),
@@ -206,7 +252,7 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
                   controller: _etnikController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Etnik',
+                      labelText: 'Etnik',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
@@ -227,7 +273,7 @@ class _RegisterHusbandScreenState extends State<RegisterHusbandScreen> {
                   controller: _nationalController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Warganegara',
+                      labelText: 'Warganegara',
                       contentPadding: EdgeInsets.all(10.0)),
                 ),
               ),
