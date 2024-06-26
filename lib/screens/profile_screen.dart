@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, prefer_const_constructors, non_constant_identifier_names, avoid_print
 
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mybukupink/screens/maternal_screen.dart';
 import 'package:mybukupink/screens/user_screen.dart';
 
@@ -31,6 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Update _userEmail with the fetched email
       setState(() {
         _userName = documentSnapshot['name'];
+        _userEmail = documentSnapshot['email'];
       });
     } catch (e) {
       print('Error fetching patient data: $e');
@@ -39,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   late String _userName = 'Loading...';
+  late String _userEmail = 'Loading...';
 
   @override
   void initState() {
@@ -87,217 +85,185 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder<DocumentSnapshot>(
-                        future: FirebaseFirestore.instance
-                            .collection('patient')
-                            .doc(user.uid)
-                            .get(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            }
-                            if (snapshot.hasData && snapshot.data != null) {
-                              final data =
-                                  snapshot.data!.data() as Map<String, dynamic>;
-                              final imageUrl = data['profilepic'];
-                              return imageUrl != null
-                                  ? ClipOval(
-                                      child: Image.network(
-                                        imageUrl,
-                                        height: 150,
-                                        width: 150,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : Image.asset(
-                                      "assets/icons/noprofile.png",
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.contain,
-                                    );
-                            }
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () async {
-                          ImagePicker imagePicker = ImagePicker();
-                          XFile? file = await imagePicker.pickImage(
-                              source: ImageSource.gallery);
-                          print('${(file?.path)}');
-
-                          if (file == null) return;
-
-                          String fileName =
-                              DateTime.now().millisecondsSinceEpoch.toString();
-
-                          Reference referenceRoot =
-                              FirebaseStorage.instance.ref();
-                          Reference referenceDirImages =
-                              referenceRoot.child('profilePic');
-
-                          Reference referenceImageToUpload =
-                              referenceDirImages.child(fileName);
-                          try {
-                            // Get the file extension
-                            String extension = file.path.split('.').last;
-
-                            // Set the content type based on the file extension
-                            String contentType =
-                                'image/jpeg'; // Default content type for images
-                            if (extension == 'png') {
-                              contentType = 'image/png';
-                            } else if (extension == 'jpg' ||
-                                extension == 'jpeg') {
-                              contentType = 'image/jpeg';
-                            }
-
-                            // Upload the file to Firebase Storage with the specified content type
-                            await referenceImageToUpload.putFile(
-                              File(file.path),
-                              SettableMetadata(contentType: contentType),
-                            );
-                            imageUrl =
-                                await referenceImageToUpload.getDownloadURL();
-                            print(
-                                'Image uploaded to Firebase Storage: $imageUrl');
-
-                            // Upload the imageUrl to Firestore
-                            await FirebaseFirestore.instance
-                                .collection('patient')
-                                .doc(user.uid)
-                                .update({'profilepic': imageUrl});
-                            print('ImageUrl uploaded to Firestore: $imageUrl');
-
-                            // Update the UI with the new image URL
-                            setState(() {
-                              imageUrl = imageUrl;
-                            });
-                          } catch (error) {
-                            print('Error uploading image: $error');
-                          }
-                        },
-                        child: Text(
-                          'Kemaskini Gambar Profil',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                      Container(
+                        margin: EdgeInsets.only(left: 30, right: 30),
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadiusDirectional.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            Column(
+                              children: [
+                                FutureBuilder<DocumentSnapshot>(
+                                  future: FirebaseFirestore.instance
+                                      .collection('patient')
+                                      .doc(user.uid)
+                                      .get(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      }
+                                      if (snapshot.hasData &&
+                                          snapshot.data != null) {
+                                        final data = snapshot.data!.data()
+                                            as Map<String, dynamic>;
+                                        final imageUrl = data['profilepic'];
+                                        return imageUrl != null
+                                            ? ClipOval(
+                                                child: Image.network(
+                                                  imageUrl,
+                                                  height: 150,
+                                                  width: 150,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : Image.asset(
+                                                "assets/icons/noprofile.png",
+                                                width: 150,
+                                                height: 150,
+                                                fit: BoxFit.contain,
+                                              );
+                                      }
+                                    }
+                                    return CircularProgressIndicator();
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 30),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _userName,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  softWrap: true,
+                                ),
+                                Text(
+                                  _userEmail,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
                   SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
+                  Container(
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Container(
-                      width: 400,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _userName,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                    ),
-                    child: Container(
-                      width: 400,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GestureDetector(
-                        child: Text(
-                          'Maklumat Ibu',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          child: Row(
+                            children: [
+                              Image.asset("assets/icons/user.png", width: 25),
+                              SizedBox(width: 20),
+                              Text(
+                                'Maklumat Ibu',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Image.asset("assets/icons/arrow.png", width: 25),
+                            ],
                           ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserScreen(),
+                              ),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => UserScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                    ),
-                    child: Container(
-                      width: 400,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GestureDetector(
-                        child: Text(
-                          'Rekod Kesihatan Ibu',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                        SizedBox(height: 10),
+                        Divider(),
+                        SizedBox(height: 10),
+                        GestureDetector(
+                          child: Row(
+                            children: [
+                              Image.asset("assets/icons/health.png", width: 25),
+                              SizedBox(width: 20),
+                              Text(
+                                'Rekod Kesihatan Ibu',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Image.asset("assets/icons/arrow.png", width: 25),
+                            ],
                           ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MaternalScreen(),
+                              ),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MaternalScreen(),
-                            ),
-                          );
-                        },
-                      ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 200),
-                  GestureDetector(
-                    onTap: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                    child: const Text(
-                      'Log Keluar',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                  SizedBox(height: 250),
+                  Container(
+                    width: 150,
+                    height: 50,
+                    padding: EdgeInsets.only(left: 15,right: 15),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(255, 53, 139, 1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/icons/exit.png", width: 25),
+                          SizedBox(width: 10),
+                          Text(
+                            'Log Keluar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

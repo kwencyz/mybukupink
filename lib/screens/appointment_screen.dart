@@ -169,6 +169,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                             final appointment = appointments[index];
                             final date = appointment['timestamp'] as Timestamp;
+
+                            final now = DateTime.now();
+                            final appointmentDate = date.toDate();
+
                             final title = appointment['title'];
                             final formattedDate =
                                 "${date.toDate().day}/${date.toDate().month}/${date.toDate().year}";
@@ -181,50 +185,115 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 date.toDate().hour >= 12 ? 'PM' : 'AM';
                             final time = "$hour:$minute $period";
 
-                            return ListTile(
-                              title: Container(
-                                width: 300,
-                                padding: EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      formattedDate,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24,
+                            if (appointmentDate.isAfter(now)) {
+                              return ListTile(
+                                title: Container(
+                                  width: 300,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(left: 10,right: 10),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(255, 53, 139, 1),
+                                              borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          "Akan Datang",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      time,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                      Text(
+                                        formattedDate,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      title,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                      Text(
+                                        time,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CheckupScreen(
-                                        appointmentId: appointment.id),
+                                      Text(
+                                        title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            );
+                                ),
+                                /* onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CheckupScreen(
+                                          appointmentId: appointment.id),
+                                    ),
+                                  );
+                                }, */
+                              );
+                            } else {
+                              return ListTile(
+                                title: Container(
+                                  width: 300,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        formattedDate,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                        ),
+                                      ),
+                                      Text(
+                                        time,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CheckupScreen(
+                                          appointmentId: appointment.id),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           },
                         );
                       },

@@ -50,6 +50,11 @@ flutter:
     - assets/icons/history.png
     - assets/icons/record.png
     - assets/icons/link.png
+    - assets/icons/edit.png
+    - assets/icons/user.png
+    - assets/icons/health.png
+    - assets/icons/arrow.png
+    - assets/icons/exit.png
     - assets/icons/noprofile.png
     - assets/icons/heart.png
     - assets/icons/scale.png

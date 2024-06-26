@@ -22,7 +22,7 @@ class _MaternalScreenState extends State<MaternalScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
+                image: AssetImage('assets/images/pinkbg.png'),
                 fit: BoxFit.cover,
               ),
             ),
