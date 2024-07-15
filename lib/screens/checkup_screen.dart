@@ -17,13 +17,11 @@ class CheckupScreen extends StatefulWidget {
 class _CheckupScreenState extends State<CheckupScreen> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  int pregnantWeeks = 0;
   Map<String, dynamic>? checkupData;
 
   @override
   void initState() {
     super.initState();
-    _calculateCurrentWeeks();
     _fetchCheckupData();
   }
 
@@ -37,37 +35,6 @@ class _CheckupScreenState extends State<CheckupScreen> {
       setState(() {
         checkupData = snapshot.docs[0].data() as Map<String, dynamic>?;
       });
-    }
-  }
-
-  void _calculateCurrentWeeks() async {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('records')
-        .where('uid', isEqualTo: user.uid)
-        .get();
-
-    if (snapshot.docs.isEmpty) {
-      // Handle case where no records are found for the user
-      return;
-    }
-
-    final data = snapshot.docs.first.data() as Map<String, dynamic>?;
-    Timestamp? startTimestamp;
-    if (data != null && data.containsKey('start')) {
-      startTimestamp = data['start'] as Timestamp;
-    }
-
-    DateTime? startDate;
-    if (startTimestamp != null) {
-      startDate = startTimestamp.toDate();
-    }
-
-    if (startDate != null) {
-      final now = DateTime.now();
-      final difference = now.difference(startDate);
-      final weeks = (difference.inDays / 7).floor();
-
-      pregnantWeeks = weeks;
     }
   }
 
@@ -307,7 +274,7 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          weight,
+                                          weight.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 28,
@@ -365,6 +332,7 @@ class _CheckupScreenState extends State<CheckupScreen> {
                         final checkupData = snapshot.data!.docs[0];
                         // Extract data from the checkup document
                         final womb = checkupData['womb'];
+                        final weeks = checkupData['weeks'];
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -393,7 +361,7 @@ class _CheckupScreenState extends State<CheckupScreen> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          pregnantWeeks.toString(),
+                                          weeks.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 28,

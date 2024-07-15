@@ -161,6 +161,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       recordData?['recordsId'] ?? "Tiada Data";
 
                                   if (result == 'Keguguran') {
+                                    // ignore: avoid_print
+                                    print(recordsId);
                                     return Theme(
                                       data: Theme.of(context).copyWith(
                                         dividerColor: Colors.transparent,

@@ -354,7 +354,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                               fontSize:
                                                                   14),
                                                       hintText:
-                                                          'Add a comment...',
+                                                          'Masukkan komen anda...',
                                                       contentPadding:
                                                           EdgeInsets.only(
                                                               left: 10),

@@ -164,7 +164,7 @@ class _LifestyleScreenState extends State<LifestyleScreen> {
                         stream: FirebaseFirestore.instance
                             .collection('article')
                             .where('category',
-                                isEqualTo: 'exercise') // Filter by category
+                                isEqualTo: 'exercise')
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
