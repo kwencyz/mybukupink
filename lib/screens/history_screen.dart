@@ -161,8 +161,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       recordData?['recordsId'] ?? "Tiada Data";
 
                                   if (result == 'Keguguran') {
-                                    // ignore: avoid_print
-                                    print(recordsId);
                                     return Theme(
                                       data: Theme.of(context).copyWith(
                                         dividerColor: Colors.transparent,
@@ -243,6 +241,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                           width: 1),
                                                     ),
                                                     onPressed: () {
+                                                      // ignore: avoid_print
+                                                      print(recordsId);
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -513,6 +513,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                           width: 1),
                                                     ),
                                                     onPressed: () {
+                                                      // ignore: avoid_print
+                                                      print(recordsId);
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
